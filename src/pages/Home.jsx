@@ -40,90 +40,112 @@ export default function Home() {
     setNuevoEquipo((prev) => ({ ...prev, [name]: name === "vencimientoPagos" ? value.split("T")[0] : value }));
   };
 
-  const confirmarAccion = (mensaje, accion) => {
+  const agregarOActualizarEquipo = () => {
+    const metodo = editando ? "PUT" : "POST";
+    const url = editando ? `http://localhost:8080/api/equipos/${editando.id}` : "http://localhost:8080/api/equipos/batch";
+    const body = editando ? JSON.stringify(nuevoEquipo) : JSON.stringify([nuevoEquipo]);
+
+    fetch(url, {
+      method: metodo,
+      headers: { "Content-Type": "application/json" },
+      body: body,
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (editando) {
+          setEquipos((prev) => prev.map((eq) => (eq.id === data.id ? data : eq)));
+          setFilteredEquipos((prev) => prev.map((eq) => (eq.id === data.id ? data : eq)));
+          Swal.fire("Actualizado", "El equipo ha sido actualizado correctamente", "success");
+        } else {
+          setEquipos((prev) => [...prev, ...data]);
+          setFilteredEquipos((prev) => [...prev, ...data]);
+          Swal.fire("Agregado", "El equipo ha sido agregado correctamente", "success");
+        }
+        setEditando(null);
+        setMostrarFormulario(false);
+        setNuevoEquipo({
+          nombre: "",
+          correo: "",
+          contrasena: "",
+          pagos: 0,
+          vencimientoPagos: "2025-12-31",
+          cuentaTarjeta: "",
+          numeroEquipos: 1,
+          numeroId: "",
+          numeroSerie: "",
+          numeroKit: "",
+          equiposActivos: true,
+        });
+      });
+  };
+
+  const eliminarEquipo = (id) => {
     Swal.fire({
-      title: "Confirmación",
-      text: mensaje,
-      icon: "warning",
+      title: '¿Estás seguro?',
+      text: 'No podrás revertir esta acción',
+      icon: 'warning',
       showCancelButton: true,
-      confirmButtonText: "Sí",
-      cancelButtonText: "No",
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar'
     }).then((result) => {
       if (result.isConfirmed) {
-        accion();
+        fetch(`http://localhost:8080/api/equipos/${id}`, { method: 'DELETE' })
+          .then(() => {
+            setEquipos((prev) => prev.filter(equipo => equipo.id !== id));
+            setFilteredEquipos((prev) => prev.filter(equipo => equipo.id !== id));
+            Swal.fire('Eliminado', 'El equipo ha sido eliminado correctamente', 'success');
+          });
       }
     });
   };
 
-  const eliminarEquipo = (id) => {
-    setMostrarFormulario(false);
-    confirmarAccion("¿Estás seguro de eliminar este equipo?", () => {
-      fetch(`http://localhost:8080/api/equipos/${id}`, { method: "DELETE" })
-        .then(() => {
-          setEquipos((prev) => prev.filter(equipo => equipo.id !== id));
-          setFilteredEquipos((prev) => prev.filter(equipo => equipo.id !== id));
-        });
-    });
-  };
-
-  const agregarOActualizarEquipo = () => {
-    confirmarAccion(editando ? "¿Deseas actualizar este equipo?" : "¿Deseas agregar este equipo?", () => {
-      const metodo = editando ? "PUT" : "POST";
-      const url = editando ? `http://localhost:8080/api/equipos/${editando.id}` : "http://localhost:8080/api/equipos/batch";
-      const body = editando ? JSON.stringify(nuevoEquipo) : JSON.stringify([nuevoEquipo]);
-
-      fetch(url, {
-        method: metodo,
-        headers: { "Content-Type": "application/json" },
-        body: body,
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          if (editando) {
-            setEquipos((prev) => prev.map((eq) => (eq.id === data.id ? data : eq)));
-            setFilteredEquipos((prev) => prev.map((eq) => (eq.id === data.id ? data : eq)));
-          } else {
-            setEquipos((prev) => [...prev, ...data]);
-            setFilteredEquipos((prev) => [...prev, ...data]);
-          }
-          setEditando(null);
-          setMostrarFormulario(false);
-          setNuevoEquipo({
-            nombre: "",
-            correo: "",
-            contrasena: "",
-            pagos: 0,
-            vencimientoPagos: "2025-12-31",
-            cuentaTarjeta: "",
-            numeroEquipos: 1,
-            numeroId: "",
-            numeroSerie: "",
-            numeroKit: "",
-            equiposActivos: true,
-          });
-        });
-    });
-  };
-
-  const handleSearch = () => {
+  const handleSearch = (e) => {
+    const term = e.target.value.toLowerCase();
+    setSearchTerm(term);
     setFilteredEquipos(equipos.filter(equipo =>
       Object.values(equipo).some(value =>
-        value && value.toString().toLowerCase().includes(searchTerm.toLowerCase())
+        value && value.toString().toLowerCase().includes(term)
       )
     ));
   };
 
   const editarEquipo = (equipo) => {
     setEditando(equipo);
-    setNuevoEquipo(equipo);
-    setMostrarFormulario(true); setEditando(equipo);
-    setNuevoEquipo({ ...equipo });;
-  };
+    setNuevoEquipo({ ...equipo });
+    setMostrarFormulario(true);
+};
+
 
   return (
     <div className="container-fluid min-vh-100 d-flex flex-column align-items-center justify-content-center bg-light p-5">
-      <div className="w-100 d-flex justify-content-end mb-4">
-        <button className="btn btn-success shadow-lg" onClick={() => setMostrarFormulario(true)}>Agregar Nuevo Equipo</button>
+      <div className="w-100 d-flex justify-content-between mb-4">
+        <input
+          className="form-control w-50"
+          type="text"
+          placeholder="Buscar equipo..."
+          value={searchTerm}
+          onChange={handleSearch}
+        />
+        <button className="btn btn-success shadow-lg" onClick={() => {
+    setMostrarFormulario(true);
+    setEditando(null);
+    setNuevoEquipo({
+        nombre: "",
+        correo: "",
+        contrasena: "",
+        pagos: 0,
+        vencimientoPagos: "2025-12-31",
+        cuentaTarjeta: "",
+        numeroEquipos: 1,
+        numeroId: "",
+        numeroSerie: "",
+        numeroKit: "",
+        equiposActivos: true,
+    });
+}}>
+    Agregar Nuevo Equipo
+</button>
+
       </div>
       {mostrarFormulario && (
         <div className="position-fixed top-50 start-50 translate-middle bg-white p-5 rounded shadow-lg w-50">
