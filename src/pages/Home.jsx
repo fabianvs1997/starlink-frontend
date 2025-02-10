@@ -23,7 +23,7 @@ export default function Home() {
   });
 
   const fetchEquipos = useCallback(() => {
-    fetch("http://localhost:8080/api/equipos")
+    fetch("https://starlink-equipos.onrender.com/api/equipos")
       .then((res) => res.json())
       .then((data) => {
         setEquipos(data);
@@ -42,7 +42,7 @@ export default function Home() {
 
   const agregarOActualizarEquipo = () => {
     const metodo = editando ? "PUT" : "POST";
-    const url = editando ? `http://localhost:8080/api/equipos/${editando.id}` : "http://localhost:8080/api/equipos/batch";
+    const url = editando ? `https://starlink-equipos.onrender.com/api/equipos/${editando.id}` : "https://starlink-equipos.onrender.com/api/equipos/batch";
     const body = editando ? JSON.stringify(nuevoEquipo) : JSON.stringify([nuevoEquipo]);
 
     fetch(url, {
@@ -89,7 +89,7 @@ export default function Home() {
       cancelButtonText: 'Cancelar'
     }).then((result) => {
       if (result.isConfirmed) {
-        fetch(`http://localhost:8080/api/equipos/${id}`, { method: 'DELETE' })
+        fetch(`https://starlink-equipos.onrender.com/api/equipos/${id}`, { method: 'DELETE' })
           .then(() => {
             setEquipos((prev) => prev.filter(equipo => equipo.id !== id));
             setFilteredEquipos((prev) => prev.filter(equipo => equipo.id !== id));
