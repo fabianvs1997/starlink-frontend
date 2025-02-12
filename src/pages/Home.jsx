@@ -118,7 +118,7 @@ export default function Home() {
   };
 
   return (
-    <div className="container-fluid min-vh-100 d-flex flex-column align-items-center justify-content-center bg-dark text-light p-3 p-md-5">
+    <div className="container-fluid min-vh-100 d-flex flex-column align-items-center bg-light p-3">
       <div className="w-100 d-flex flex-column flex-md-row justify-content-between align-items-center mb-3">
         <input
           className="form-control w-100 w-md-50 mb-2 mb-md-0"
