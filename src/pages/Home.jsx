@@ -13,7 +13,7 @@ export default function Home() {
     correo: "",
     contrasena: "",
     pagos: 0,
-    vencimientoPagos: "2025-12-31",
+    vencimientoPagos: "",
     cuentaTarjeta: "",
     numeroEquipos: 1,
     numeroId: "",
@@ -37,45 +37,42 @@ export default function Home() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setNuevoEquipo((prev) => ({ ...prev, [name]: name === "vencimientoPagos" ? value.split("T")[0] : value }));
+    setNuevoEquipo((prev) => ({
+      ...prev,
+      [name]: name === "vencimientoPagos" ? value.split("T")[0] : value
+    }));
   };
 
   const agregarOActualizarEquipo = () => {
+    const equipoFinal = {
+      ...nuevoEquipo,
+      vencimientoPagos: nuevoEquipo.vencimientoPagos
+        ? new Date(nuevoEquipo.vencimientoPagos).toISOString()
+        : null,
+    };
+
     const metodo = editando ? "PUT" : "POST";
-    const url = editando ? `https://starlink-equipos.onrender.com/api/equipos/${editando.id}` : "https://starlink-equipos.onrender.com/api/equipos/batch";
-    const body = editando ? JSON.stringify(nuevoEquipo) : JSON.stringify([nuevoEquipo]);
+    const url = editando
+      ? `https://starlink-equipos.onrender.com/api/equipos/${editando.id}`
+      : "https://starlink-equipos.onrender.com/api/equipos/batch";
 
     fetch(url, {
       method: metodo,
       headers: { "Content-Type": "application/json" },
-      body: body,
+      body: JSON.stringify(editando ? equipoFinal : [equipoFinal]),
     })
       .then((res) => res.json())
       .then((data) => {
         if (editando) {
           setEquipos((prev) => prev.map((eq) => (eq.id === data.id ? data : eq)));
           setFilteredEquipos((prev) => prev.map((eq) => (eq.id === data.id ? data : eq)));
-          Swal.fire("Actualizado", "El equipo ha sido actualizado correctamente", "success");
         } else {
           setEquipos((prev) => [...prev, ...data]);
           setFilteredEquipos((prev) => [...prev, ...data]);
-          Swal.fire("Agregado", "El equipo ha sido agregado correctamente", "success");
         }
+        Swal.fire(editando ? "Actualizado" : "Agregado", "El equipo ha sido guardado correctamente", "success");
         setEditando(null);
         setMostrarFormulario(false);
-        setNuevoEquipo({
-          nombre: "",
-          correo: "",
-          contrasena: "",
-          pagos: 0,
-          vencimientoPagos: "2025-12-31",
-          cuentaTarjeta: "",
-          numeroEquipos: 1,
-          numeroId: "",
-          numeroSerie: "",
-          numeroKit: "",
-          equiposActivos: true,
-        });
       });
   };
 
@@ -111,52 +108,49 @@ export default function Home() {
 
   const editarEquipo = (equipo) => {
     setEditando(equipo);
-    setNuevoEquipo({ ...equipo });
+    setNuevoEquipo({
+      ...equipo,
+      vencimientoPagos: equipo.vencimientoPagos
+        ? new Date(equipo.vencimientoPagos).toISOString().split("T")[0]
+        : ""
+    });
     setMostrarFormulario(true);
-};
-
+  };
 
   return (
-    <div className="container-fluid min-vh-100 d-flex flex-column align-items-center justify-content-center bg-light p-5">
-      <div className="w-100 d-flex justify-content-between mb-4">
+    <div className="container-fluid min-vh-100 d-flex flex-column align-items-center justify-content-center bg-dark text-light p-3 p-md-5">
+      <div className="w-100 d-flex flex-column flex-md-row justify-content-between align-items-center mb-3">
         <input
-          className="form-control w-50"
+          className="form-control w-100 w-md-50 mb-2 mb-md-0"
           type="text"
           placeholder="Buscar equipo..."
           value={searchTerm}
           onChange={handleSearch}
         />
-        <button className="btn btn-success shadow-lg" onClick={() => {
-    setMostrarFormulario(true);
-    setEditando(null);
-    setNuevoEquipo({
-        nombre: "",
-        correo: "",
-        contrasena: "",
-        pagos: 0,
-        vencimientoPagos: "2025-12-31",
-        cuentaTarjeta: "",
-        numeroEquipos: 1,
-        numeroId: "",
-        numeroSerie: "",
-        numeroKit: "",
-        equiposActivos: true,
-    });
-}}>
-    Agregar Nuevo Equipo
-</button>
-
+        <button className="btn btn-success shadow-lg w-100 w-md-auto" onClick={() => {
+          setMostrarFormulario(true);
+          setEditando(null);
+        }}>
+          Agregar Nuevo Equipo
+        </button>
       </div>
+
+      <div className="table-responsive w-100">
+        <Table equipos={filteredEquipos} editarEquipo={editarEquipo} eliminarEquipo={eliminarEquipo} />
+      </div>
+
       {mostrarFormulario && (
-        <div className="position-fixed top-50 start-50 translate-middle bg-white p-5 rounded shadow-lg w-50">
-          <h1 className="text-center mb-4 text-primary">{editando ? "Editar Equipo" : "Agregar Equipo"}</h1>
+        <div className="position-fixed top-50 start-50 translate-middle bg-white text-dark p-4 rounded shadow-lg w-100 w-md-50">
+          <h1 className="text-center mb-3 text-primary">{editando ? "Editar Equipo" : "Agregar Equipo"}</h1>
           <p className="text-center text-muted">Complete todos los campos antes de continuar</p>
-          <div className="row mb-4 justify-content-center">
+          <div className="row mb-3 justify-content-center">
             {Object.entries(nuevoEquipo).map(([campo, valor], index) => (
-              <div key={index} className="col-md-4">
-                <label className="form-label fw-bold text-uppercase text-secondary">{campo.replace(/([A-Z])/g, " $1").trim()}</label>
+              <div key={index} className="col-12 col-md-6">
+                <label className="form-label fw-bold text-uppercase text-secondary">
+                  {campo.replace(/([A-Z])/g, " $1").trim()}
+                </label>
                 <input
-                  className="form-control mb-3 text-center border-primary rounded-pill"
+                  className="form-control mb-3 text-center border-primary rounded"
                   name={campo}
                   type={campo === "vencimientoPagos" ? "date" : "text"}
                   value={valor ?? ""}
@@ -165,15 +159,15 @@ export default function Home() {
               </div>
             ))}
           </div>
-          <button className="btn btn-primary mb-2 w-100 shadow-sm" onClick={agregarOActualizarEquipo}>
+          <button className="btn btn-primary mb-2 w-100 btn-lg" onClick={agregarOActualizarEquipo}>
             {editando ? "Actualizar Equipo" : "Agregar Equipo"}
           </button>
-          <button className="btn btn-secondary w-100 shadow-sm" onClick={() => setMostrarFormulario(false)}>
+          <button className="btn btn-secondary w-100 btn-lg" onClick={() => setMostrarFormulario(false)}>
             Cancelar
           </button>
         </div>
       )}
-      <Table equipos={filteredEquipos} editarEquipo={editarEquipo} eliminarEquipo={eliminarEquipo} />
     </div>
   );
 }
+
