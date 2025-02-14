@@ -1,5 +1,6 @@
 import { useEffect, useState, useCallback } from "react";
-import Table from "../components/Table";
+import EquipoForm from "../components/EquipoForm";
+import EquipoTable from "../components/EquipoTable";
 import Swal from "sweetalert2";
 
 export default function Home() {
@@ -96,16 +97,6 @@ export default function Home() {
     });
   };
 
-  const handleSearch = (e) => {
-    const term = e.target.value.toLowerCase();
-    setSearchTerm(term);
-    setFilteredEquipos(equipos.filter(equipo =>
-      Object.values(equipo).some(value =>
-        value && value.toString().toLowerCase().includes(term)
-      )
-    ));
-  };
-
   const editarEquipo = (equipo) => {
     setEditando(equipo);
     setNuevoEquipo({
@@ -125,7 +116,7 @@ export default function Home() {
           type="text"
           placeholder="Buscar equipo..."
           value={searchTerm}
-          onChange={handleSearch}
+          onChange={(e) => setSearchTerm(e.target.value)}
         />
         <button className="btn btn-success shadow-lg w-100 w-md-auto" onClick={() => {
           setMostrarFormulario(true);
@@ -135,39 +126,17 @@ export default function Home() {
         </button>
       </div>
 
-      <div className="table-responsive w-100">
-        <Table equipos={filteredEquipos} editarEquipo={editarEquipo} eliminarEquipo={eliminarEquipo} />
-      </div>
+      <EquipoTable equipos={filteredEquipos} editarEquipo={editarEquipo} eliminarEquipo={eliminarEquipo} />
 
       {mostrarFormulario && (
-        <div className="position-fixed top-50 start-50 translate-middle bg-white text-dark p-4 rounded shadow-lg w-100 w-md-50">
-          <h1 className="text-center mb-3 text-primary">{editando ? "Editar Equipo" : "Agregar Equipo"}</h1>
-          <p className="text-center text-muted">Complete todos los campos antes de continuar</p>
-          <div className="row mb-3 justify-content-center">
-            {Object.entries(nuevoEquipo).map(([campo, valor], index) => (
-              <div key={index} className="col-12 col-md-6">
-                <label className="form-label fw-bold text-uppercase text-secondary">
-                  {campo.replace(/([A-Z])/g, " $1").trim()}
-                </label>
-                <input
-                  className="form-control mb-3 text-center border-primary rounded"
-                  name={campo}
-                  type={campo === "vencimientoPagos" ? "date" : "text"}
-                  value={valor ?? ""}
-                  onChange={handleChange}
-                />
-              </div>
-            ))}
-          </div>
-          <button className="btn btn-primary mb-2 w-100 btn-lg" onClick={agregarOActualizarEquipo}>
-            {editando ? "Actualizar Equipo" : "Agregar Equipo"}
-          </button>
-          <button className="btn btn-secondary w-100 btn-lg" onClick={() => setMostrarFormulario(false)}>
-            Cancelar
-          </button>
-        </div>
+        <EquipoForm
+          nuevoEquipo={nuevoEquipo}
+          handleChange={handleChange}
+          agregarOActualizarEquipo={agregarOActualizarEquipo}
+          setMostrarFormulario={setMostrarFormulario}
+          editando={editando}
+        />
       )}
     </div>
   );
 }
-
