@@ -13,11 +13,13 @@ html, body {
 
 /* Contenedor principal */
 .futuristic-container {
-  margin: 80px auto 0 auto;   /* 80px de margen arriba para la navbar fija, 0 a los lados pero centrado */
-  max-width: 1200px;         /* Ancho máximo para que no se extienda demasiado en pantallas grandes */
-  padding: 0 1rem;           /* Espacio interno a izquierda y derecha */
-  box-sizing: border-box;     /* Asegura que padding no rompa el ancho total */
+  margin-top: 60px;    /* Para no quedar oculto debajo del navbar de 60px */
+  width: 100%;         /* Ocupa todo el ancho */
+  min-height: 100vh;   /* Opcional, para que se extienda en toda la pantalla */
+  padding: 1rem;       /* Un poco de padding para no quedar pegado al borde */
+  box-sizing: border-box;
 }
+
 
 /* 3) Título */
 .futuristic-title {
@@ -31,21 +33,19 @@ html, body {
 /* 4) Contenedor (card) con efecto translúcido */
 .futuristic-card {
   width: 100%;
-  max-width: 1200px;
-  background: rgba(255, 255, 255, 0.08); /* Un velo de blanco, semitransparente */
+  margin: 1rem 0; /* un poco de margen vertical */
+  background: rgba(255, 255, 255, 0.07);
   backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border-radius: 12px;
   border: 1px solid rgba(255, 255, 255, 0.2);
-  box-shadow: 0 0 15px rgba(0,0,0,0.5);
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.3);
   overflow: hidden;
-  margin-bottom: 2rem;
 }
 
-/* 5) Ajuste interno de la tarjeta */
 .futuristic-card-body {
-  padding: 1.5rem;
+  padding: 1rem;
 }
+
 
 /* 6) Tabla con fondo transparente */
 .table-futuristic {
@@ -116,34 +116,28 @@ html, body {
   color: #fff;
 }
 
-/* Navbar futurista (futuristic.css) */
-/* futuristic.css (extracto) */
-
-/* --- NAVBAR FIJA --- */
+/* Navbar fija y full width */
 .futuristic-navbar {
   position: fixed;
   top: 0;
-  width: 100%;
+  left: 0;            /* se asegura de ocupar toda la pantalla a la izquierda */
+  right: 0;           /* toda la pantalla a la derecha */
   z-index: 999;
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  background: rgba(255, 255, 255, 0.1);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
-  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-}
+  height: 60px;       /* Ajusta la altura que quieras */
 
-.futuristic-navbar-container {
-  max-width: 1200px;
-  margin: 0 auto;         /* centra horizontalmente */
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0.75rem 1rem;  /* algo de espacio interno */
-  box-sizing: border-box;
+
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  padding: 0 1rem;    /* Espacio horizontal para que no quede pegado */
 }
 
-
-/* Marca del navbar (logo o texto principal) */
+/* Marca (izquierda) */
 .futuristic-nav-brand {
   font-size: 1.4rem;
   font-weight: 700;
@@ -152,6 +146,7 @@ html, body {
   color: #fff;
 }
 
+/* Links (derecha) */
 .futuristic-nav-links {
   list-style: none;
   display: flex;
@@ -170,8 +165,6 @@ html, body {
 .futuristic-nav-links li a:hover {
   color: #fff;
 }
-
-
 
 
 /* futuristic.css */

@@ -199,8 +199,7 @@ const eliminarEquipo = (id) => {
 
   return (
     <div className="futuristic-container">
-      <h1 className="futuristic-title">Starlink Equipos</h1>
-
+       <h1 className="futuristic-title">Starlink Equipos</h1>
       <div className="row w-100 mb-3">
         <div className="col-12 col-md-6 mb-2 mb-md-0">
           <input
