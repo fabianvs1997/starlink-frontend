@@ -1,30 +1,31 @@
+
+import React from "react";
 import { Link } from "react-router-dom";
 
 export default function Navbar() {
   return (
-    <nav className="navbar navbar-expand-lg navbar-dark bg-primary">
-      <div className="container">
-        <Link className="navbar-brand" to="/">Starlink Equipos</Link>
-        <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-          <span className="navbar-toggler-icon"></span>
-        </button>
-        <div className="collapse navbar-collapse" id="navbarNav">
-          <ul className="navbar-nav ms-auto">
-            <li className="nav-item">
-              <Link className="nav-link" to="/dashboard">Panel de Control</Link>
-            </li>
-            <li className="nav-item">
-              <Link className="nav-link" to="/stats">Estadísticas</Link>
-            </li>
-            <li className="nav-item">
-              <Link className="nav-link" to="/add-equipo">Agregar Equipo</Link>
-            </li>
-            <li className="nav-item">
-              <Link className="nav-link" to="/equipos">Lista de Equipos</Link>
-            </li>
-          </ul>
-        </div>
+    <nav className="futuristic-navbar">
+      {/* Contenedor interno que centra y controla el ancho */}
+      <div className="futuristic-navbar-container">
+        <div className="futuristic-nav-brand">STARLINK EQUIPOS</div>
+        <ul className="futuristic-nav-links">
+          <li>
+            <Link to="/">Panel de Control</Link>
+          </li>
+          <li>
+            <Link to="/estadisticas">Estadísticas</Link>
+          </li>
+          <li>
+            <Link to="/agregar">Agregar Equipo</Link>
+          </li>
+          <li>
+            <Link to="/lista">Lista de Equipos</Link>
+          </li>
+        </ul>
       </div>
     </nav>
   );
 }
+
+
+

@@ -1,0 +1,246 @@
+/* futuristic.css */
+
+/* 1) Fondo degradado para el body/html */
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+  color: #ffffff; /* Texto blanco por defecto */
+  font-family: sans-serif; /* O la que prefieras */
+}
+
+
+/* Contenedor principal */
+.futuristic-container {
+  margin: 80px auto 0 auto;   /* 80px de margen arriba para la navbar fija, 0 a los lados pero centrado */
+  max-width: 1200px;         /* Ancho máximo para que no se extienda demasiado en pantallas grandes */
+  padding: 0 1rem;           /* Espacio interno a izquierda y derecha */
+  box-sizing: border-box;     /* Asegura que padding no rompa el ancho total */
+}
+
+/* 3) Título */
+.futuristic-title {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  font-size: 2rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+
+/* 4) Contenedor (card) con efecto translúcido */
+.futuristic-card {
+  width: 100%;
+  max-width: 1200px;
+  background: rgba(255, 255, 255, 0.08); /* Un velo de blanco, semitransparente */
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 0 15px rgba(0,0,0,0.5);
+  overflow: hidden;
+  margin-bottom: 2rem;
+}
+
+/* 5) Ajuste interno de la tarjeta */
+.futuristic-card-body {
+  padding: 1.5rem;
+}
+
+/* 6) Tabla con fondo transparente */
+.table-futuristic {
+  width: 100%;
+  color: #fff; /* Texto blanco */
+  border-collapse: collapse;
+}
+
+.table-futuristic thead th {
+  background-color: rgba(255, 255, 255, 0.15);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.table-futuristic th,
+.table-futuristic td {
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 0.75rem;
+}
+
+.table-futuristic tbody tr:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* 7) Barra de búsqueda futurista */
+.futuristic-search {
+  background-color: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.3);
+  color: #fff;
+  border-radius: 8px;
+}
+
+.futuristic-search::placeholder {
+  color: #ddd;
+}
+
+.futuristic-search:focus {
+  outline: none;
+  box-shadow: 0 0 5px #00c9ff;
+}
+
+/* 8) Botones estilo neon (verde y rojo) */
+.btn-futuristic {
+  border: 2px solid #00ff99;
+  color: #00ff99;
+  background: transparent;
+  border-radius: 50px;
+  text-transform: uppercase;
+  font-weight: bold;
+  transition: 0.3s;
+  cursor: pointer;
+  padding: 0.4rem 1rem;
+}
+
+.btn-futuristic:hover {
+  background: #00ff99;
+  color: #000;
+}
+
+.btn-futuristic-danger {
+  border: 2px solid #ff0066;
+  color: #ff0066;
+  background: transparent;
+}
+
+.btn-futuristic-danger:hover {
+  background: #ff0066;
+  color: #fff;
+}
+
+/* Navbar futurista (futuristic.css) */
+/* futuristic.css (extracto) */
+
+/* --- NAVBAR FIJA --- */
+.futuristic-navbar {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 999;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  background: rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+
+.futuristic-navbar-container {
+  max-width: 1200px;
+  margin: 0 auto;         /* centra horizontalmente */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;  /* algo de espacio interno */
+  box-sizing: border-box;
+}
+
+
+/* Marca del navbar (logo o texto principal) */
+.futuristic-nav-brand {
+  font-size: 1.4rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #fff;
+}
+
+.futuristic-nav-links {
+  list-style: none;
+  display: flex;
+  gap: 1.5rem;
+  margin: 0;
+  padding: 0;
+}
+
+.futuristic-nav-links li a {
+  color: #00ff99;
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.3s;
+}
+
+.futuristic-nav-links li a:hover {
+  color: #fff;
+}
+
+
+
+
+/* futuristic.css */
+
+/* Modal futurista */
+.futuristic-modal .modal-content {
+  background: rgba(255, 255, 255, 0.08); /* Velo de blanco */
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 0 15px rgba(0,0,0,0.5);
+}
+
+.futuristic-modal .modal-header,
+.futuristic-modal .modal-footer {
+  border: none; /* Elimina la línea gris */
+  background: transparent;
+}
+
+/* Cambia el color del texto del título */
+.futuristic-modal .modal-title {
+  color: #fff;
+}
+
+/* Botón de cerrar (X) en color claro */
+.futuristic-modal .btn-close {
+  filter: invert(100%);
+}
+
+/* Ajusta inputs a tu gusto (opcional) */
+.futuristic-modal .form-control {
+  background: rgba(255,255,255,0.1);
+  color: #fff;
+  border: 1px solid rgba(255,255,255,0.3);
+}
+.futuristic-modal .form-control:focus {
+  outline: none;
+  box-shadow: 0 0 5px #00c9ff;
+}
+
+.futuristic-swal-popup {
+  background: rgba(255, 255, 255, 0.1) !important;
+  color: #fff !important;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.2);
+  box-shadow: 0 0 15px rgba(0,0,0,0.5);
+}
+
+.futuristic-swal-title {
+  color: #fff !important;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.futuristic-swal-confirm {
+  background: transparent !important;
+  border: 2px solid #00ff99 !important;
+  color: #00ff99 !important;
+  border-radius: 50px !important;
+  text-transform: uppercase;
+  font-weight: bold;
+  transition: 0.3s;
+}
+
+.futuristic-swal-confirm:hover {
+  background: #00ff99 !important;
+  color: #000 !important;
+}
+
