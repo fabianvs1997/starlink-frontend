@@ -9,7 +9,8 @@ export default function Home() {
   const [filteredEquipos, setFilteredEquipos] = useState([]);
   const [editando, setEditando] = useState(null);
   const [mostrarFormulario, setMostrarFormulario] = useState(false);
-  const [nuevoEquipo, setNuevoEquipo] = useState({
+
+  const initialEquipo = {
     nombre: "",
     correo: "",
     contrasena: "",
@@ -21,7 +22,8 @@ export default function Home() {
     numeroSerie: "",
     numeroKit: "",
     equiposActivos: true,
-  });
+  };
+  const [nuevoEquipo, setNuevoEquipo] = useState(initialEquipo);
 
   const fetchEquipos = useCallback(() => {
     fetch("https://starlink-equipos.onrender.com/api/equipos")
@@ -29,6 +31,10 @@ export default function Home() {
       .then((data) => {
         setEquipos(data);
         setFilteredEquipos(data);
+      })
+      .catch((error) => {
+        console.error("Error al obtener los equipos:", error);
+        Swal.fire("Error", "No se pudieron obtener los equipos", "error");
       });
   }, []);
 
@@ -36,14 +42,31 @@ export default function Home() {
     fetchEquipos();
   }, [fetchEquipos]);
 
+  // Filtrado de búsqueda
+  useEffect(() => {
+    if (!searchTerm.trim()) {
+      setFilteredEquipos(equipos);
+    } else {
+      const term = searchTerm.toLowerCase();
+      const filtered = equipos.filter((eq) => {
+        const nombre = eq.nombre ? eq.nombre.toLowerCase() : "";
+        const correo = eq.correo ? eq.correo.toLowerCase() : "";
+        return nombre.includes(term) || correo.includes(term);
+      });
+      setFilteredEquipos(filtered);
+    }
+  }, [searchTerm, equipos]);
+
+  // Manejador de inputs
   const handleChange = (e) => {
     const { name, value } = e.target;
     setNuevoEquipo((prev) => ({
       ...prev,
-      [name]: name === "vencimientoPagos" ? value.split("T")[0] : value
+      [name]: name === "vencimientoPagos" ? value.split("T")[0] : value,
     }));
   };
 
+  // Agregar o actualizar equipo
   const agregarOActualizarEquipo = () => {
     const equipoFinal = {
       ...nuevoEquipo,
@@ -65,69 +88,130 @@ export default function Home() {
       .then((res) => res.json())
       .then((data) => {
         if (editando) {
-          setEquipos((prev) => prev.map((eq) => (eq.id === data.id ? data : eq)));
-          setFilteredEquipos((prev) => prev.map((eq) => (eq.id === data.id ? data : eq)));
+          setEquipos((prev) =>
+            prev.map((eq) => (eq.id === data.id ? data : eq))
+          );
+          setFilteredEquipos((prev) =>
+            prev.map((eq) => (eq.id === data.id ? data : eq))
+          );
         } else {
           setEquipos((prev) => [...prev, ...data]);
           setFilteredEquipos((prev) => [...prev, ...data]);
         }
-        Swal.fire(editando ? "Actualizado" : "Agregado", "El equipo ha sido guardado correctamente", "success");
+        Swal.fire(
+          editando ? "Actualizado" : "Agregado",
+          "El equipo ha sido guardado correctamente",
+          "success"
+        );
         setEditando(null);
         setMostrarFormulario(false);
+        setNuevoEquipo(initialEquipo); // Limpia el formulario
+      })
+      .catch((error) => {
+        console.error("Error al guardar el equipo:", error);
+        Swal.fire("Error", "No se pudo guardar el equipo", "error");
       });
   };
 
+  // Eliminar equipo
   const eliminarEquipo = (id) => {
     Swal.fire({
-      title: '¿Estás seguro?',
-      text: 'No podrás revertir esta acción',
-      icon: 'warning',
+      title: "¿Estás seguro?",
+      text: "No podrás revertir esta acción",
+      icon: "warning",
       showCancelButton: true,
-      confirmButtonText: 'Sí, eliminar',
-      cancelButtonText: 'Cancelar'
+      confirmButtonText: "Sí, eliminar",
+      cancelButtonText: "Cancelar",
     }).then((result) => {
       if (result.isConfirmed) {
-        fetch(`https://starlink-equipos.onrender.com/api/equipos/${id}`, { method: 'DELETE' })
-          .then(() => {
-            setEquipos((prev) => prev.filter(equipo => equipo.id !== id));
-            setFilteredEquipos((prev) => prev.filter(equipo => equipo.id !== id));
-            Swal.fire('Eliminado', 'El equipo ha sido eliminado correctamente', 'success');
+        fetch(`https://starlink-equipos.onrender.com/api/equipos/${id}`, {
+          method: "DELETE",
+        })
+          .then((res) => {
+            if (!res.ok) {
+              throw new Error("Error en la eliminación");
+            }
+            setEquipos((prev) => prev.filter((equipo) => equipo.id !== id));
+            setFilteredEquipos((prev) =>
+              prev.filter((equipo) => equipo.id !== id)
+            );
+            Swal.fire(
+              "Eliminado",
+              "El equipo ha sido eliminado correctamente",
+              "success"
+            );
+          })
+          .catch((error) => {
+            console.error("Error al eliminar el equipo:", error);
+            Swal.fire("Error", "No se pudo eliminar el equipo", "error");
           });
       }
     });
   };
 
+  // Editar equipo
   const editarEquipo = (equipo) => {
     setEditando(equipo);
     setNuevoEquipo({
       ...equipo,
       vencimientoPagos: equipo.vencimientoPagos
         ? new Date(equipo.vencimientoPagos).toISOString().split("T")[0]
-        : ""
+        : "",
     });
     setMostrarFormulario(true);
   };
 
   return (
-    <div className="container-fluid min-vh-100 d-flex flex-column align-items-center bg-light p-3">
-      <div className="w-100 d-flex flex-column flex-md-row justify-content-between align-items-center mb-3">
-        <input
-          className="form-control w-100 w-md-50 mb-2 mb-md-0"
-          type="text"
-          placeholder="Buscar equipo..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
-        <button className="btn btn-success shadow-lg w-100 w-md-auto" onClick={() => {
-          setMostrarFormulario(true);
-          setEditando(null);
-        }}>
-          Agregar Nuevo Equipo
-        </button>
+    <div className="container-fluid min-vh-100 d-flex flex-column align-items-center bg-light p-3 w-100">
+      <h1 className="text-center mb-4">Starlink Equipos</h1>
+
+      {/* Barra de búsqueda y botón de agregar */}
+      <div className="row w-100 mb-3">
+        <div className="col-12 col-md-6 mb-2 mb-md-0">
+          <input
+            className="form-control"
+            type="text"
+            placeholder="Buscar equipo por nombre o correo..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </div>
+        <div className="col-12 col-md-6 d-flex justify-content-md-end">
+          <button
+            className="btn btn-success shadow-lg"
+            onClick={() => {
+              setMostrarFormulario(true);
+              setEditando(null);
+              setNuevoEquipo(initialEquipo);
+            }}
+          >
+            Agregar Nuevo Equipo
+          </button>
+        </div>
       </div>
 
-      <EquipoTable equipos={filteredEquipos} editarEquipo={editarEquipo} eliminarEquipo={eliminarEquipo} />
+      {/* Card blanca que contiene la tabla */}
+      <div className="card w-100" style={{ maxWidth: "1200px" }}>
+        <div className="card-body">
+          {filteredEquipos.length === 0 ? (
+            <div className="alert alert-info w-100 text-center">
+              {equipos.length === 0
+                ? "No hay equipos registrados. ¡Agrega el primero!"
+                : "No se encontraron resultados para tu búsqueda."}
+            </div>
+          ) : (
+            <div className="table-responsive">
+              <EquipoTable
+                equipos={filteredEquipos}
+                editarEquipo={editarEquipo}
+                eliminarEquipo={eliminarEquipo}
+              />
+            </div>
+          )}
+        </div>
+      </div>
 
+      {/* Formulario flotante */}
       {mostrarFormulario && (
         <EquipoForm
           nuevoEquipo={nuevoEquipo}
@@ -140,3 +224,5 @@ export default function Home() {
     </div>
   );
 }
+
+
