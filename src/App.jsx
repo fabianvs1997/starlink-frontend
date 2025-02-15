@@ -5,10 +5,12 @@ import Dashboard from "./pages/Dashboard";
 import Stats from "./pages/Stats";
 import AddEquipo from "./pages/AddEquipo";
 import ListaEquipos from "./pages/ListaEquipos";
+import ParticlesBackground from "./components/ParticlesBackground";
 
 function App() {
   return (
     <Router>
+      <ParticlesBackground />
       <Navbar />
       <div className="container mt-4">
         <Routes>
@@ -24,3 +26,4 @@ function App() {
 }
 
 export default App;
+

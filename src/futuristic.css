@@ -1,101 +1,113 @@
-/* futuristic.css */
-
-/* 1) Fondo degradado para el body/html */
+/* Reset y configuración global */
 html, body {
   margin: 0;
   padding: 0;
-  height: 100%;
+  min-height: 100vh;
   background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
-  color: #ffffff; /* Texto blanco por defecto */
-  font-family: sans-serif; /* O la que prefieras */
+  background-attachment: fixed;
+  font-family: 'Roboto', sans-serif; /* Puedes usar otra fuente elegante */
+  color: #fff;
+  overflow-x: hidden;
 }
 
-.btn-futuristic {
-  transition: box-shadow 0.3s, background-color 0.3s;
+/* Scrollbar personalizado */
+::-webkit-scrollbar {
+  width: 8px;
 }
-.btn-futuristic:hover {
-  box-shadow: 0 0 8px #00ff99, 0 0 20px #00ff99;
+::-webkit-scrollbar-track {
+  background: rgba(255,255,255,0.1);
+}
+::-webkit-scrollbar-thumb {
+  background: #00ff99;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #00cc7a;
 }
 
+/* Animación para resaltar filas (opcional) */
+.highlight-row {
+  animation: highlight 2s ease;
+}
+@keyframes highlight {
+  0% { background-color: #00ff99; }
+  100% { background-color: transparent; }
+}
 
-
-/* Contenedor principal */
+/* Contenedor principal para el contenido (ancho completo con padding) */
 .futuristic-container {
-  margin-top: 60px;    /* Para no quedar oculto debajo del navbar de 60px */
-  width: 100%;         /* Ocupa todo el ancho */
-  min-height: 100vh;   /* Opcional, para que se extienda en toda la pantalla */
-  padding: 1rem;       /* Un poco de padding para no quedar pegado al borde */
+  margin-top: 80px;         /* Deja espacio para la navbar fija */
+  width: 100%;
+  padding: 0 1rem;
   box-sizing: border-box;
 }
 
-
-/* 3) Título */
+/* Título principal elegante */
 .futuristic-title {
   text-align: center;
   margin-bottom: 1.5rem;
   font-size: 2rem;
-  letter-spacing: 1.5px;
+  letter-spacing: 2px;
   text-transform: uppercase;
+  font-weight: 500;
 }
 
-/* 4) Contenedor (card) con efecto translúcido */
+/* Tarjetas con efecto "glass" sutil y bordes suaves */
 .futuristic-card {
   width: 100%;
-  margin: 1rem 0; /* un poco de margen vertical */
+  margin: 1rem 0;
   background: rgba(255, 255, 255, 0.07);
   backdrop-filter: blur(8px);
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.3);
+  box-shadow: 0 0 15px rgba(0,0,0,0.4);
   overflow: hidden;
 }
-
 .futuristic-card-body {
   padding: 1rem;
 }
 
-
-/* 6) Tabla con fondo transparente */
+/* Tablas elegantes: fondo transparente, bordes sutiles y hover suave */
 .table-futuristic {
   width: 100%;
-  color: #fff; /* Texto blanco */
+  color: #fff;
   border-collapse: collapse;
 }
-
 .table-futuristic thead th {
   background-color: rgba(255, 255, 255, 0.15);
   text-transform: uppercase;
   letter-spacing: 1px;
+  padding: 0.75rem;
 }
-
 .table-futuristic th,
 .table-futuristic td {
   border: 1px solid rgba(255, 255, 255, 0.2);
   padding: 0.75rem;
+  text-align: left;
 }
-
 .table-futuristic tbody tr:hover {
   background-color: rgba(255, 255, 255, 0.1);
 }
 
-/* 7) Barra de búsqueda futurista */
+/* Barra de búsqueda futurista con input minimal */
 .futuristic-search {
   background-color: rgba(255,255,255,0.1);
   border: 1px solid rgba(255,255,255,0.3);
   color: #fff;
   border-radius: 8px;
+  padding: 0.5rem 0.75rem;
+  width: 100%;
+  box-sizing: border-box;
 }
-
 .futuristic-search::placeholder {
   color: #ddd;
 }
-
 .futuristic-search:focus {
   outline: none;
   box-shadow: 0 0 5px #00c9ff;
 }
 
-/* 8) Botones estilo neon (verde y rojo) */
+/* Botones estilo neón con transiciones suaves */
 .btn-futuristic {
   border: 2px solid #00ff99;
   color: #00ff99;
@@ -103,58 +115,73 @@ html, body {
   border-radius: 50px;
   text-transform: uppercase;
   font-weight: bold;
-  transition: 0.3s;
+  padding: 0.5rem 1.2rem;
+  transition: all 0.3s ease;
   cursor: pointer;
-  padding: 0.4rem 1rem;
 }
-
 .btn-futuristic:hover {
   background: #00ff99;
   color: #000;
+  box-shadow: 0 0 12px #00ff99;
 }
-
 .btn-futuristic-danger {
   border: 2px solid #ff0066;
   color: #ff0066;
   background: transparent;
+  border-radius: 50px;
+  text-transform: uppercase;
+  font-weight: bold;
+  padding: 0.5rem 1.2rem;
+  transition: all 0.3s ease;
+  cursor: pointer;
 }
-
 .btn-futuristic-danger:hover {
   background: #ff0066;
   color: #fff;
+  box-shadow: 0 0 12px #ff0066;
 }
 
-/* Navbar fija y full width */
+/* Navbar fija que ocupa todo el ancho */
 .futuristic-navbar {
   position: fixed;
   top: 0;
-  left: 0;            /* se asegura de ocupar toda la pantalla a la izquierda */
-  right: 0;           /* toda la pantalla a la derecha */
+  left: 0;
+  right: 0;
   z-index: 999;
-  height: 60px;       /* Ajusta la altura que quieras */
-
+  height: 60px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-
+  justify-content: center;
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   border-bottom: 1px solid rgba(255, 255, 255, 0.3);
   box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-  padding: 0 1rem;    /* Espacio horizontal para que no quede pegado */
 }
 
-/* Marca (izquierda) */
+/* Contenedor interno de la navbar para centrar contenido */
+.futuristic-navbar-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1rem;
+  box-sizing: border-box;
+}
+
+/* Marca en la navbar */
 .futuristic-nav-brand {
   font-size: 1.4rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 1px;
   color: #fff;
+  margin-left: 1rem; /* Ajusta para moverlo un poco a la izquierda */
 }
 
-/* Links (derecha) */
+/* Enlaces de la navbar */
 .futuristic-nav-links {
   list-style: none;
   display: flex;
@@ -162,49 +189,37 @@ html, body {
   margin: 0;
   padding: 0;
 }
-
 .futuristic-nav-links li a {
   color: #00ff99;
   text-decoration: none;
   font-weight: 600;
   transition: color 0.3s;
 }
-
 .futuristic-nav-links li a:hover {
   color: #fff;
 }
 
-
-/* futuristic.css */
-
 /* Modal futurista */
 .futuristic-modal .modal-content {
-  background: rgba(255, 255, 255, 0.08); /* Velo de blanco */
+  background: rgba(255, 255, 255, 0.08);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255,255,255,0.2);
   color: #fff;
   border-radius: 12px;
   box-shadow: 0 0 15px rgba(0,0,0,0.5);
 }
-
 .futuristic-modal .modal-header,
 .futuristic-modal .modal-footer {
-  border: none; /* Elimina la línea gris */
+  border: none;
   background: transparent;
 }
-
-/* Cambia el color del texto del título */
 .futuristic-modal .modal-title {
   color: #fff;
 }
-
-/* Botón de cerrar (X) en color claro */
 .futuristic-modal .btn-close {
   filter: invert(100%);
 }
-
-/* Ajusta inputs a tu gusto (opcional) */
 .futuristic-modal .form-control {
   background: rgba(255,255,255,0.1);
   color: #fff;
@@ -215,6 +230,7 @@ html, body {
   box-shadow: 0 0 5px #00c9ff;
 }
 
+/* Estilos para SweetAlert2 personalizados */
 .futuristic-swal-popup {
   background: rgba(255, 255, 255, 0.1) !important;
   color: #fff !important;
@@ -223,13 +239,11 @@ html, body {
   border: 1px solid rgba(255,255,255,0.2);
   box-shadow: 0 0 15px rgba(0,0,0,0.5);
 }
-
 .futuristic-swal-title {
   color: #fff !important;
   text-transform: uppercase;
   letter-spacing: 1px;
 }
-
 .futuristic-swal-confirm {
   background: transparent !important;
   border: 2px solid #00ff99 !important;
@@ -239,9 +253,9 @@ html, body {
   font-weight: bold;
   transition: 0.3s;
 }
-
 .futuristic-swal-confirm:hover {
   background: #00ff99 !important;
   color: #000 !important;
 }
+
 
