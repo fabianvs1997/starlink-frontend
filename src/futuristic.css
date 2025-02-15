@@ -10,6 +10,14 @@ html, body {
   font-family: sans-serif; /* O la que prefieras */
 }
 
+.btn-futuristic {
+  transition: box-shadow 0.3s, background-color 0.3s;
+}
+.btn-futuristic:hover {
+  box-shadow: 0 0 8px #00ff99, 0 0 20px #00ff99;
+}
+
+
 
 /* Contenedor principal */
 .futuristic-container {
