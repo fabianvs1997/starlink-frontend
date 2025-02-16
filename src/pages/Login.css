@@ -1,0 +1,81 @@
+/* src/pages/Login.css */
+
+/* Contenedor principal */
+.login-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  /* Fondo degradado futurista */
+  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+}
+
+/* Tarjeta translúcida con efecto glass */
+.login-card {
+  width: 350px;
+  background: rgba(255, 255, 255, 0.08); /* un velo blanco */
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  box-shadow: 0 0 15px rgba(0,0,0,0.5);
+  padding: 2rem;
+  color: #fff;
+  text-align: center;
+}
+
+/* Título */
+.login-card h2 {
+  margin-bottom: 1.5rem;
+  font-family: 'Orbitron', sans-serif; /* Fuente futurista si gustas */
+  letter-spacing: 1px;
+}
+
+/* Formulario */
+.login-card form {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+/* Labels */
+.login-card form label {
+  margin: 0.5rem 0 0.25rem;
+  font-weight: bold;
+  text-align: left;
+}
+
+/* Inputs */
+.login-card form input {
+  width: 100%;
+  padding: 0.5rem;
+  margin-bottom: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 8px;
+  background: rgba(255,255,255,0.1);
+  color: #fff;
+  outline: none;
+}
+
+.login-card form input::placeholder {
+  color: #ccc;
+}
+
+/* Botón de Login con estilo neon */
+.login-card form button {
+  width: 100%;
+  padding: 0.75rem;
+  border-radius: 50px;
+  border: 2px solid #00ff99;
+  background: transparent;
+  color: #00ff99;
+  text-transform: uppercase;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.login-card form button:hover {
+  background: #00ff99;
+  color: #000;
+  box-shadow: 0 0 10px #00ff99, 0 0 20px #00ff99;
+}

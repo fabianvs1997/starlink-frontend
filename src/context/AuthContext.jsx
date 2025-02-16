@@ -47,11 +47,12 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const login = async (correo, password) => {
+  const login = async (correo, password, recaptchaToken) => {
     try {
       const response = await axios.post("https://auth-w1cf.onrender.com/api/auth/login", {
         correo,
         password,
+        recaptchaToken
       });
       const token = response.data.token;
       await validateAndRefreshToken(token);
