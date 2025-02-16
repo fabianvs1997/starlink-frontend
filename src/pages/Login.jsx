@@ -20,7 +20,7 @@ const Login = () => {
       // Guarda el token en localStorage o en tu gestor de estado (Context, Redux, etc.)
       localStorage.setItem('authToken', token);
       // Redirige al dashboard o donde desees
-      window.location.href = '/dashboard';
+      window.location.href = '/';
     } catch (err) {
       console.error(err);
       setError('Credenciales inválidas. Por favor, inténtalo de nuevo.');

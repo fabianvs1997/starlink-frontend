@@ -4,10 +4,16 @@ import './index.css'
 import App from './App.jsx'
 import './futuristic.css'
 import "bootstrap/dist/css/bootstrap.min.css";
-
+import { BrowserRouter as Router } from 'react-router-dom';
+import { AuthProvider } from './context/AuthContext';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <App />
-  </StrictMode>,
+    <Router>
+      <AuthProvider>
+        <App />
+      </AuthProvider>
+    </Router>
+  </StrictMode>
 )
+
