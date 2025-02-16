@@ -10,6 +10,15 @@
   background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
 }
 
+
+.error-message {
+  color: #ff0066; /* rojo neón */
+  margin-bottom: 1rem;
+  font-weight: bold;
+  text-align: center;
+}
+
+
 /* Tarjeta translúcida con efecto glass */
 .login-card {
   width: 350px;
