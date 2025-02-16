@@ -10,31 +10,42 @@ export default function Login() {
 
   const [correo, setCorreo] = useState('');
   const [password, setPassword] = useState('');
+  const [errorMessage, setErrorMessage] = useState(''); // Estado para el error
 
-  // Al enviar el formulario
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!window.grecaptcha) {
-      alert("reCAPTCHA no está listo. Revisa si cargó el script en index.html");
+      setErrorMessage("reCAPTCHA no está listo. Revisa si cargó el script en index.html");
       return;
     }
 
     try {
-      // 1) Esperar a que grecaptcha esté listo
       window.grecaptcha.enterprise.ready(async () => {
-        // 2) Ejecutar con tu site key y la acción
-        const tokenRecaptcha = await window.grecaptcha.enterprise.execute("6LcPB9kqAAAAAEg_Llt4ejSvsdGeAoyzmwB3Ms2x", {
-          action: "LOGIN"
-        });
+        const tokenRecaptcha = await window.grecaptcha.enterprise.execute(
+          "6LcPB9kqAAAAAEg_Llt4ejSvsdGeAoyzmwB3Ms2x",
+          { action: "LOGIN" }
+        );
 
-        // 3) Llamar a la función login con (correo, password, tokenRecaptcha)
+        // Llamamos a la función login con (correo, password, tokenRecaptcha)
         await login(correo, password, tokenRecaptcha);
         navigate('/');
       });
     } catch (error) {
       console.error('Error de login:', error);
-      alert('Credenciales inválidas o reCAPTCHA fallido.');
+
+      // Si el backend retorna un status 401, 400, etc., podemos detectarlo así:
+      if (error.response) {
+        if (error.response.status === 401) {
+          setErrorMessage("Credenciales inválidas");
+        } else if (error.response.status === 400) {
+          setErrorMessage("Faltan credenciales o petición inválida");
+        } else {
+          setErrorMessage(`Error ${error.response.status}: ${error.response.data}`);
+        }
+      } else {
+        setErrorMessage('Error de login o reCAPTCHA fallido.');
+      }
     }
   };
 
@@ -42,6 +53,14 @@ export default function Login() {
     <div className="login-container">
       <div className="login-card">
         <h2>Iniciar Sesión</h2>
+
+        {/* Si hay un mensaje de error, lo mostramos */}
+        {errorMessage && (
+          <div className="error-message">
+            {errorMessage}
+          </div>
+        )}
+
         <form onSubmit={handleSubmit}>
           <label>Correo</label>
           <input
@@ -67,5 +86,3 @@ export default function Login() {
     </div>
   );
 }
-
-
