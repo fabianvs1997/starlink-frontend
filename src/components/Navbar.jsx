@@ -19,6 +19,9 @@ export default function Navbar() {
         <li>
           <Link to="/lista">Lista de Equipos</Link>
         </li>
+        <li>
+          <Link to="/login">Login</Link>
+        </li>
       </ul>
     </nav>
   );

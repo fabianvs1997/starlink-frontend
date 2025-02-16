@@ -6,6 +6,8 @@ import Stats from "./pages/Stats";
 import AddEquipo from "./pages/AddEquipo";
 import ListaEquipos from "./pages/ListaEquipos";
 import ParticlesBackground from "./components/ParticlesBackground";
+import Login from './pages/Login';
+import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
   return (
@@ -14,11 +16,16 @@ function App() {
       <Navbar />
       <div className="container mt-4">
         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/stats" element={<Stats />} />
-          <Route path="/add-equipo" element={<AddEquipo />} />
-          <Route path="/equipos" element={<ListaEquipos />} />
+          {/* Rutas protegidas */}
+          <Route element={<ProtectedRoute />}>
+            <Route path="/" element={<Home />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/stats" element={<Stats />} />
+            <Route path="/add-equipo" element={<AddEquipo />} />
+            <Route path="/equipos" element={<ListaEquipos />} />
+          </Route>
+          {/* Ruta pública para login */}
+          <Route path="/login" element={<Login />} />
         </Routes>
       </div>
     </Router>

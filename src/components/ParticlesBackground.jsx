@@ -10,18 +10,20 @@ export default function ParticlesBackground() {
     }
   }, []);
 
-  return (
-      <div
-  id="particles-js"
-  style={{
-    position: "absolute",
-    top: 0,
-    left: 0,
-    width: "100%",
-    minHeight: "100vh",
-    zIndex: -1,
-  }}
-/>
+return (
+  <div
+    id="particles-js"
+    style={{
+      position: "fixed",
+      top: 0,
+      left: 0,
+      width: "100%",
+      height: "100%",
+      zIndex: -1,
+      background: "rgba(255,0,0,0.2)" // Fondo rojo semitransparente
+    }}
+  />
+);
 
-  );
+
 }
