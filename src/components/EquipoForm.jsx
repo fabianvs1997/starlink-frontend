@@ -84,7 +84,7 @@ export default function EquipoForm({
                   type="date"
                   className="form-control"
                   name="vencimientoPagos"
-                  value={nuevoEquipo.vencimientoPagos}
+                  value={nuevoEquipo.vencimientoPagos} // es "YYYY-MM-DD" o ""
                   onChange={handleChange}
                 />
               </div>
@@ -192,4 +192,5 @@ export default function EquipoForm({
     </div>
   );
 }
+
 

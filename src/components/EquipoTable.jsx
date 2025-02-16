@@ -1,5 +1,14 @@
 import React from "react";
 
+// Función auxiliar para formatear fechas en formato "YYYY-MM-DD" a "DD/MM/YYYY"
+function formatDate(dateStr) {
+  if (!dateStr) return "Sin Fecha";
+  const parts = dateStr.split("-");
+  if (parts.length !== 3) return dateStr; // En caso de formato inesperado
+  const [year, month, day] = parts;
+  return `${day}/${month}/${year}`;
+}
+
 export default function EquipoTable({ equipos, editarEquipo, eliminarEquipo }) {
   return (
     <table className="table-futuristic">
@@ -26,15 +35,7 @@ export default function EquipoTable({ equipos, editarEquipo, eliminarEquipo }) {
             <td>{equipo.correo}</td>
             <td>{equipo.contrasena}</td>
             <td>{equipo.pagos}</td>
-            <td>
-              {equipo.vencimientoPagos
-                ? new Date(equipo.vencimientoPagos).toLocaleDateString("es-ES", {
-                    day: "2-digit",
-                    month: "2-digit",
-                    year: "numeric",
-                  })
-                : "Sin Fecha"}
-            </td>
+            <td>{formatDate(equipo.vencimientoPagos)}</td>
             <td>{equipo.cuentaTarjeta || "N/A"}</td>
             <td>{equipo.numeroEquipos}</td>
             <td>{equipo.numeroId}</td>

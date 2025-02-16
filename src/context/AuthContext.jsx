@@ -1,11 +1,10 @@
+// src/context/AuthContext.jsx
 import React, { createContext, useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate, useLocation } from "react-router-dom";
 
-// Creamos el contexto
 export const AuthContext = createContext();
 
-// Proveedor del contexto
 export const AuthProvider = ({ children }) => {
   const [auth, setAuth] = useState({ token: null, userId: null, loading: true });
   const navigate = useNavigate();
@@ -17,7 +16,6 @@ export const AuthProvider = ({ children }) => {
       validateAndRefreshToken(storedToken);
     } else {
       setAuth({ token: null, userId: null, loading: false });
-      // Solo navega a /login si NO estamos ya en /login
       if (location.pathname !== "/login") {
         navigate("/login");
       }
@@ -27,14 +25,12 @@ export const AuthProvider = ({ children }) => {
 
   const validateAndRefreshToken = async (token) => {
     try {
-      // Llamar a tu endpoint de validación
       const validateResponse = await axios.post(
         "https://auth-w1cf.onrender.com/api/auth/validate",
         { token }
       );
       if (validateResponse.data.message === "Token válido") {
         const userId = validateResponse.data.userId;
-        // Llamar a tu endpoint de refresh
         const refreshResponse = await axios.post(
           "https://auth-w1cf.onrender.com/api/tokens/refresh",
           { token }
@@ -58,7 +54,6 @@ export const AuthProvider = ({ children }) => {
         password,
       });
       const token = response.data.token;
-      // Validar y refrescar el token recién obtenido
       await validateAndRefreshToken(token);
       navigate("/");
     } catch (error) {
@@ -79,3 +74,4 @@ export const AuthProvider = ({ children }) => {
     </AuthContext.Provider>
   );
 };
+
