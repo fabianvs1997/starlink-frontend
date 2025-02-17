@@ -1,0 +1,32 @@
+.dashboard-container {
+  padding: 2rem;
+}
+
+.metric-cards {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.card {
+  background: rgba(255,255,255,0.07);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.2);
+  padding: 1rem;
+  border-radius: 8px;
+  flex: 1;
+  text-align: center;
+}
+
+.chart-section {
+  margin-bottom: 2rem;
+}
+
+.last-equipos {
+  margin-bottom: 2rem;
+}
+
+.last-equipos ul {
+  list-style: none;
+  padding: 0;
+}
