@@ -14,7 +14,7 @@ const Navbar = () => {
         </div>
         <ul className="futuristic-nav-links">
           <li>
-            <Link to="/">Panel de Control</Link>
+            <Link to="/dashboard">Panel de Control</Link>
           </li>
           <li>
             <Link to="/estadisticas">Estadísticas</Link>
