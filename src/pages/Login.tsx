@@ -1,3 +1,4 @@
+
 import React, { useState, useContext, FormEvent, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '@/context/AuthContext';
@@ -9,8 +10,8 @@ const Login: React.FC = () => {
   const navigate = useNavigate();
 
   const [credentials, setCredentials] = useState({
-    correo: 'admin@starlink.com',
-    password: 'admin123'
+    correo: '',
+    password: ''
   });
   const [recaptchaLoaded, setRecaptchaLoaded] = useState(false);
 
@@ -57,10 +58,11 @@ const Login: React.FC = () => {
 
       navigate('/dashboard');
     } catch (error: any) {
+      console.error("Error en Login.tsx:", error);
       Swal.fire({
         icon: 'error',
-        title: 'Error de Inicio de Sesión',
-        text: error.message || 'Ocurrió un error al iniciar sesión',
+        title: 'Error al iniciar sesión',
+        text: error?.response?.data?.message || error.message || 'Ocurrió un error inesperado',
         background: 'rgba(0,0,0,0.8)',
         color: '#fff'
       });
