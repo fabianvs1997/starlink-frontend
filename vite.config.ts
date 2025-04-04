@@ -10,6 +10,12 @@ export default defineConfig({
     },
   },
   build: {
+    rollupOptions: {
+      external: [], // Asegúrate de que Recharts no esté en external
+    },
     outDir: 'dist'
+  },
+  optimizeDeps: {
+    include: ['recharts']
   }
 })
