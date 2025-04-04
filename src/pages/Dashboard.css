@@ -1,0 +1,115 @@
+/* src/pages/Dashboard.css */
+
+/* Contenedor principal del Dashboard */
+.dashboard-container {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding: 2rem;
+  color: #fff;
+  /* Fondo degradado (opcional) o lo de tu app */
+  /* background: linear-gradient(135deg, #0f2027, #203a43, #2c5364); */
+}
+
+/* Título principal */
+.dashboard-title {
+  text-align: center;
+  margin-bottom: 1rem;
+  font-family: 'Orbitron', sans-serif; /* Fuente futurista */
+  letter-spacing: 1px;
+  font-size: 2rem;
+}
+
+/* Contenedor de tarjetas */
+.metric-cards {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+
+/* Cada tarjeta de métrica */
+.metric-card {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  padding: 1.5rem;
+  text-align: center;
+  min-width: 120px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.4);
+  transition: transform 0.3s;
+}
+
+.metric-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 15px rgba(0,0,0,0.6);
+}
+
+.metric-card h3 {
+  margin: 0;
+  margin-bottom: 0.5rem;
+  font-size: 1.1rem;
+}
+
+.metric-card p {
+  font-size: 1.4rem;
+  font-weight: bold;
+  margin: 0;
+}
+
+/* Sección para el gráfico */
+.chart-section {
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.chart-section h3 {
+  margin-bottom: 1rem;
+  font-size: 1.2rem;
+}
+
+/* Lista de últimos equipos */
+.last-equipos {
+  margin-top: 2rem;
+  text-align: center;
+}
+
+.last-equipos h3 {
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+}
+
+.last-equipos ul {
+  list-style: none;
+  padding: 0;
+  max-width: 400px;
+  margin: 0 auto;
+  text-align: left;
+}
+
+.last-equipos li {
+  margin-bottom: 0.5rem;
+  background: rgba(255,255,255,0.05);
+  padding: 0.5rem;
+  border-radius: 8px;
+}
+
+.metric-cards {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-bottom: 2rem;
+  flex-wrap: wrap; /* Para que se acomoden en varias filas */
+}
+
+/* Nuevo para la lista de próximos a vencer */
+.last-equipos ul li {
+  margin-bottom: 0.5rem;
+  background: rgba(255,255,255,0.05);
+  padding: 0.5rem;
+  border-radius: 8px;
+}
+
