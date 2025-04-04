@@ -20,7 +20,7 @@
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.23.1",
     "recharts": "^2.15.2",
-    "sweetalert2": "^11.6.13",
+    "sweetalert2": "^11.17.2",
     "yup": "^1.6.1"
   },
   "devDependencies": {
