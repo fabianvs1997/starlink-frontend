@@ -171,32 +171,155 @@ html, body {
   box-sizing: border-box;
 }
 
-/* Marca en la navbar */
-.futuristic-nav-brand {
-  font-size: 1.4rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  color: #fff;
-  margin-left: 1rem; /* Ajusta para moverlo un poco a la izquierda */
+/* Mejoras al navbar */
+.futuristic-navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 999;
+  height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(15, 23, 42, 0.8);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  transition: all 0.3s ease;
 }
 
-/* Enlaces de la navbar */
+.futuristic-navbar-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 2rem;
+}
+
+.futuristic-nav-brand {
+  font-size: 1.5rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  background: linear-gradient(90deg, #00ff99 0%, #33ccff 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  transition: transform 0.3s ease;
+}
+
+.futuristic-nav-brand:hover {
+  transform: scale(1.05);
+}
+
 .futuristic-nav-links {
   list-style: none;
   display: flex;
-  gap: 1.5rem;
+  gap: 1.8rem;
   margin: 0;
   padding: 0;
+  align-items: center;
 }
-.futuristic-nav-links li a {
-  color: #00ff99;
+
+.futuristic-nav-links li a,
+.futuristic-nav-links li button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: rgba(255, 255, 255, 0.85);
   text-decoration: none;
-  font-weight: 600;
-  transition: color 0.3s;
+  font-weight: 500;
+  font-size: 0.95rem;
+  letter-spacing: 0.5px;
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  position: relative;
 }
-.futuristic-nav-links li a:hover {
+
+.futuristic-nav-links li a:hover,
+.futuristic-nav-links li button:hover {
   color: #fff;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.futuristic-nav-links li a::after,
+.futuristic-nav-links li button::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #00ff99, #33ccff);
+  transition: all 0.3s ease;
+  transform: translateX(-50%);
+}
+
+.futuristic-nav-links li a:hover::after,
+.futuristic-nav-links li button:hover::after {
+  width: 70%;
+}
+
+/* Botón especial para login/logout */
+.login-button,
+.logout-button {
+  background: transparent !important;
+  border: 2px solid #00ff99 !important;
+  color: #00ff99 !important;
+  border-radius: 50px !important;
+  padding: 0.45rem 1.2rem !important;
+  font-weight: 600 !important;
+  cursor: pointer;
+  transition: all 0.3s ease !important;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.login-button:hover {
+  background: #00ff99 !important;
+  color: #0f172a !important;
+  box-shadow: 0 0 15px rgba(0, 255, 153, 0.5);
+}
+
+.logout-button {
+  background: transparent !important;
+  border: 2px solid #ff3366 !important;
+  color: #ff3366 !important;
+}
+
+.logout-button:hover {
+  background: #ff3366 !important;
+  color: #fff !important;
+  box-shadow: 0 0 15px rgba(255, 51, 102, 0.5);
+}
+
+/* Agregar fontawesome */
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css');
+
+/* Ajuste para responsive */
+@media (max-width: 768px) {
+  .futuristic-navbar-container {
+    padding: 0 1rem;
+  }
+  
+  .futuristic-nav-links {
+    gap: 0.8rem;
+  }
+  
+  .futuristic-nav-links li a,
+  .futuristic-nav-links li button {
+    padding: 0.4rem 0.6rem;
+    font-size: 0.85rem;
+  }
+  
+  .futuristic-nav-brand {
+    font-size: 1.2rem;
+  }
 }
 
 /* Modal futurista */
