@@ -19,7 +19,33 @@ const Login: React.FC = () => {
     const script = document.createElement('script');
     script.src = "https://www.google.com/recaptcha/enterprise.js?render=6LcPB9kqAAAAAEg_Llt4ejSvsdGeAoyzmwB3Ms2x";
     script.async = true;
-    script.onload = () => setRecaptchaLoaded(true);
+
+    script.onload = () => {
+      if (window.grecaptcha && window.grecaptcha.enterprise) {
+        setRecaptchaLoaded(true);
+      } else {
+        console.error("El script se cargó, pero grecaptcha.enterprise no está disponible.");
+        Swal.fire({
+          icon: 'error',
+          title: 'Error de reCAPTCHA',
+          text: 'No se pudo inicializar reCAPTCHA. Intenta recargar la página.',
+          background: 'rgba(0,0,0,0.8)',
+          color: '#fff'
+        });
+      }
+    };
+
+    script.onerror = () => {
+      console.error("Error cargando el script de reCAPTCHA");
+      Swal.fire({
+        icon: 'error',
+        title: 'Error cargando reCAPTCHA',
+        text: 'No se pudo cargar el script de reCAPTCHA.',
+        background: 'rgba(0,0,0,0.8)',
+        color: '#fff'
+      });
+    };
+
     document.body.appendChild(script);
 
     return () => {
