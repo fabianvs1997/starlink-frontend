@@ -1,54 +1,41 @@
-# React + TypeScript + Vite
+# 🛰️ Starlink Manager Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Frontend completo estilo Starlink para administración de equipos.
 
-Currently, two official plugins are available:
+## 🚀 Inicio Rápido
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+1. Descomprime en una carpeta
+2. Abre terminal en la carpeta frontend
+3. Ejecuta: `python -m http.server 8000`
+4. Abre navegador: http://localhost:8000
 
-## Expanding the ESLint configuration
+## ⚙️ Requisitos
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- Backend Spring Boot corriendo en http://localhost:8080
+- Python 3 o Node.js (para servidor local)
+- Navegador moderno
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+## 📋 Funcionalidades
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+✅ Dashboard con estadísticas en tiempo real
+✅ Ver, crear, editar y eliminar equipos
+✅ Registrar y ver pagos
+✅ Interfaz responsiva estilo Starlink
+✅ Notificaciones en tiempo real
+✅ Conexión automática con API REST
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## 📁 Estructura
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
-```
+- index.html - Estructura HTML
+- starlink.css - Estilos profesionales
+- starlink.js - Lógica de conexión con API
+
+## 🔗 API Endpoints
+
+Conecta automáticamente a:
+- GET /api/estadisticas
+- GET /api/equipos
+- POST/PUT/DELETE /api/equipos
+- GET/POST/DELETE /api/pagos
+
+¡Listo para usar! 🎉

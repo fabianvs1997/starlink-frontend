@@ -1,13 +1,41 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite + React + TS</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Starlink Manager - Sistema Modular</title>
+  
+  <!-- Estilos -->
+  <link rel="stylesheet" href="assets/css/main.css">
+  <link rel="stylesheet" href="assets/css/components.css">
+  <link rel="stylesheet" href="assets/css/theme.css">
+  
+  <!-- Chart.js para gráficos -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
+</head>
+<body id="app-body">
+  <!-- Loader global -->
+  <div id="global-loader" style="display:none">
+    <div class="loader-spinner"></div>
+    <p>Cargando...</p>
+  </div>
+
+  <!-- Header dinámico -->
+  <header id="app-header"></header>
+  
+  <!-- Contenido principal -->
+  <main id="app-content" class="main-content"></main>
+  
+  <!-- Contenedor de modales -->
+  <div id="modal-container"></div>
+  
+  <!-- Contenedor de notificaciones toast -->
+  <div id="toast-container" class="toast-container"></div>
+  
+  <!-- Notificaciones en tiempo real -->
+  <div id="notifications-realtime" class="notifications-realtime"></div>
+
+  <!-- Script principal (tipo module) -->
+  <script type="module" src="assets/js/app.js"></script>
+</body>
 </html>
