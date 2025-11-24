@@ -1,7 +1,9 @@
 /**
  * Módulo Equipos
+ * Con cifrado AES-256 para datos sensibles
  */
 import ApiClient from '../core/api.js';
+import CryptoService from '../core/crypto.js';
 import { 
   formatearMoneda, 
   formatearFecha, 
@@ -22,6 +24,18 @@ export class EquiposModule {
     this.equipoActual = null;
     this.modalEquipo = null;
     this.modalDetalle = null;
+    
+    // ✅ CAMPOS SENSIBLES QUE SE CIFRAN/DESCIFRAN
+    this.camposSensibles = [
+      'nombre',
+      'correo',
+      'contraseña',
+      'cuentaTarjeta',
+      'numeroId',
+      'numeroSerie',
+      'numeroKit',
+      'notas'
+    ];
   }
   
   /**
@@ -115,20 +129,33 @@ export class EquiposModule {
   }
   
   /**
-   * Cargar equipos
+   * Cargar equipos desde API
    */
   async cargarEquipos() {
-    const result = await ApiClient.get('/equipos');
-    
-    if (!result || !result.data) {
+    try {
+      const result = await ApiClient.get('/equipos');
+      
+      if (!result || !result.data) {
+        document.getElementById('equipos-content').innerHTML = 
+          '<div class="sl-error-state">❌ Error al cargar equipos</div>';
+        return;
+      }
+      
+      console.log('📦 Equipos cifrados recibidos:', result.data);
+      
+      // ✅ DESCIFRAR TODOS LOS EQUIPOS
+      this.equipos = await CryptoService.decryptArray(result.data, this.camposSensibles);
+      
+      console.log('🔓 Equipos descifrados:', this.equipos);
+      
+      this.equiposFiltrados = [...this.equipos];
+      this.renderEquipos();
+      
+    } catch (error) {
+      console.error('❌ Error al cargar equipos:', error);
       document.getElementById('equipos-content').innerHTML = 
         '<div class="sl-error-state">❌ Error al cargar equipos</div>';
-      return;
     }
-    
-    this.equipos = result.data;
-    this.equiposFiltrados = [...this.equipos];
-    this.renderEquipos();
   }
   
   /**
@@ -166,7 +193,7 @@ export class EquiposModule {
   }
   
   /**
-   * Renderizar equipos
+   * Renderizar equipos en tabla
    */
   renderEquipos() {
     const content = document.getElementById('equipos-content');
@@ -300,9 +327,10 @@ export class EquiposModule {
             </div>
             
             <div class="form-group">
-              <label for="form-nombre">Nombre del Cliente <span class="required">*</span></label>
+              <label for="form-nombre">Nombre del Cliente <span class="required">*</span> 🔒</label>
               <input type="text" id="form-nombre" required value="${data.nombre || ''}" 
                      placeholder="Ej: Juan Pérez">
+              <small>Este campo se guarda cifrado</small>
             </div>
           </div>
         </div>
@@ -312,15 +340,17 @@ export class EquiposModule {
           
           <div class="form-row">
             <div class="form-group">
-              <label for="form-correo">Correo Electrónico <span class="required">*</span></label>
+              <label for="form-correo">Correo Electrónico <span class="required">*</span> 🔒</label>
               <input type="email" id="form-correo" required value="${data.correo || ''}"
                      placeholder="correo@ejemplo.com">
+              <small>Este campo se guarda cifrado</small>
             </div>
             
             <div class="form-group">
-              <label for="form-password">Contraseña <span class="required">*</span></label>
+              <label for="form-password">Contraseña <span class="required">*</span> 🔒</label>
               <input type="password" id="form-password" required value="${data.contraseña || ''}"
                      placeholder="Mínimo 6 caracteres">
+              <small>Este campo se guarda cifrado</small>
             </div>
           </div>
         </div>
@@ -342,9 +372,10 @@ export class EquiposModule {
           </div>
           
           <div class="form-group">
-            <label for="form-cuenta">Cuenta/Tarjeta <span class="required">*</span></label>
+            <label for="form-cuenta">Cuenta/Tarjeta <span class="required">*</span> 🔒</label>
             <input type="text" id="form-cuenta" required value="${data.cuentaTarjeta || ''}"
                    placeholder="Últimos 4 dígitos o referencia">
+            <small>Este campo se guarda cifrado</small>
           </div>
         </div>
         
@@ -358,23 +389,26 @@ export class EquiposModule {
             </div>
             
             <div class="form-group">
-              <label for="form-id">Número de ID <span class="required">*</span></label>
+              <label for="form-id">Número de ID <span class="required">*</span> 🔒</label>
               <input type="text" id="form-id" required value="${data.numeroId || ''}"
                      placeholder="ID único del equipo">
+              <small>Este campo se guarda cifrado</small>
             </div>
           </div>
           
           <div class="form-row">
             <div class="form-group">
-              <label for="form-serie">Número de Serie <span class="required">*</span></label>
+              <label for="form-serie">Número de Serie <span class="required">*</span> 🔒</label>
               <input type="text" id="form-serie" required value="${data.numeroSerie || ''}"
                      placeholder="Serie del dispositivo">
+              <small>Este campo se guarda cifrado</small>
             </div>
             
             <div class="form-group">
-              <label for="form-kit">Número de Kit <span class="required">*</span></label>
+              <label for="form-kit">Número de Kit <span class="required">*</span> 🔒</label>
               <input type="text" id="form-kit" required value="${data.numeroKit || ''}"
                      placeholder="Kit de instalación">
+              <small>Este campo se guarda cifrado</small>
             </div>
           </div>
         </div>
@@ -383,13 +417,14 @@ export class EquiposModule {
           <h3>📝 Notas Adicionales</h3>
           
           <div class="form-group">
-            <label for="form-notas">Observaciones</label>
+            <label for="form-notas">Observaciones 🔒</label>
             <textarea id="form-notas" rows="3" placeholder="Notas o comentarios adicionales...">${data.notas || ''}</textarea>
+            <small>Este campo se guarda cifrado</small>
           </div>
         </div>
         
         <div class="form-actions">
-          <button type="button" class="btn btn-secondary" onclick="document.querySelector('.sl-modal').style.display='none'">
+          <button type="button" class="btn btn-secondary" onclick="document.querySelector('.sl-modal')?.style?.display='none'">
             ❌ Cancelar
           </button>
           <button type="submit" class="btn btn-primary">
@@ -401,14 +436,14 @@ export class EquiposModule {
   }
   
   /**
-   * Guardar equipo
+   * Guardar equipo (crear o actualizar)
    */
   async guardarEquipo(e) {
     e.preventDefault();
     
     const id = document.getElementById('equipo-id')?.value;
     
-    const data = {
+    const formData = {
       categoria: document.getElementById('form-categoria').value,
       nombre: document.getElementById('form-nombre').value,
       correo: document.getElementById('form-correo').value,
@@ -424,19 +459,34 @@ export class EquiposModule {
       activo: 'SI'
     };
     
-    Loader.show('Guardando equipo...');
-    
-    const method = id ? 'PUT' : 'POST';
-    const endpoint = id ? `/equipos/${id}` : '/equipos';
-    
-    const result = await ApiClient.request(endpoint, method, data);
-    
-    Loader.hide();
-    
-    if (result) {
-      Toast.success(id ? '✏️ Equipo actualizado exitosamente' : '➕ Equipo creado exitosamente');
-      this.modalEquipo.close();
-      await this.cargarEquipos();
+    try {
+      Loader.show('Guardando equipo...');
+      
+      console.log('📝 Datos del formulario (descifrados):', formData);
+      
+      // ✅ CIFRAR DATOS SENSIBLES ANTES DE ENVIAR
+      const dataCifrada = await CryptoService.encryptObject(formData, this.camposSensibles);
+      
+      console.log('🔒 Datos cifrados para enviar:', dataCifrada);
+      
+      const method = id ? 'PUT' : 'POST';
+      const endpoint = id ? `/equipos/${id}` : '/equipos';
+      
+      const result = await ApiClient.request(endpoint, method, dataCifrada);
+      
+      Loader.hide();
+      
+      if (result) {
+        Toast.success(id ? '✏️ Equipo actualizado' : '➕ Equipo creado');
+        this.modalEquipo?.close();
+        await this.cargarEquipos();
+        this.renderEquipos();
+      }
+      
+    } catch (error) {
+      console.error('❌ Error al guardar equipo:', error);
+      Loader.hide();
+      Toast.error('Error al guardar equipo');
     }
   }
   
@@ -444,34 +494,41 @@ export class EquiposModule {
    * Ver detalle de equipo
    */
   async verEquipo(id) {
-    Loader.show('Cargando equipo...');
-    
-    const result = await ApiClient.get(`/equipos/${id}`);
-    
-    Loader.hide();
-    
-    if (!result || !result.data) return;
-    
-    const equipo = result.data;
-    this.equipoActual = equipo;
-    
-    const content = this.renderDetalleEquipo(equipo);
-    
-    this.modalDetalle = new Modal({
-      title: `📱 ${equipo.nombre}`,
-      content: content,
-      size: 'large',
-      footer: `
-        <button class="btn btn-primary" onclick="window.app.currentModule.editarEquipo()">
-          ✏️ Editar
-        </button>
-        <button class="btn btn-danger" onclick="window.app.currentModule.eliminarEquipo()">
-          🗑️ Eliminar
-        </button>
-      `
-    });
-    
-    this.modalDetalle.open();
+    try {
+      Loader.show('Cargando equipo...');
+      
+      const result = await ApiClient.get(`/equipos/${id}`);
+      
+      if (!result || !result.data) {
+        throw new Error('No se pudo cargar el equipo');
+      }
+      
+      console.log('📦 Equipo cifrado:', result.data);
+      
+      // ✅ DESCIFRAR EQUIPO
+      const equipo = await CryptoService.decryptObject(result.data, this.camposSensibles);
+      
+      console.log('🔓 Equipo descifrado:', equipo);
+      
+      this.equipoActual = equipo;
+      
+      const content = this.renderDetalleEquipo(equipo);
+      
+      this.modalDetalle = new Modal({
+        title: `📱 ${equipo.nombre}`,
+        content: content,
+        size: 'large'
+      });
+      
+      this.modalDetalle.open();
+      
+      Loader.hide();
+      
+    } catch (error) {
+      console.error('❌ Error al cargar equipo:', error);
+      Loader.hide();
+      Toast.error('Error al cargar equipo');
+    }
   }
   
   /**
@@ -507,9 +564,10 @@ export class EquiposModule {
         </div>
         
         <div class="detalle-section">
-          <h3>📧 Contacto</h3>
+          <h3>📧 Contacto 🔒</h3>
           <p><strong>Correo:</strong> <a href="mailto:${equipo.correo}">${sanitizeHTML(equipo.correo)}</a></p>
-          <p><strong>Contraseña:</strong> ${'•'.repeat(equipo.contraseña.length)}</p>
+          <p><strong>Contraseña:</strong> ${'•'.repeat(equipo.contraseña?.length || 8)}</p>
+          <small>Datos cifrados</small>
         </div>
         
         <div class="detalle-section">
@@ -517,7 +575,7 @@ export class EquiposModule {
           <p><strong>Monto Mensual:</strong> ${formatearMoneda(equipo.montoMensual)}</p>
           <p><strong>Deuda:</strong> <span class="text-danger">${formatearMoneda(equipo.deudaMensual || 0)}</span></p>
           <p><strong>Pagado este mes:</strong> <span class="text-success">${formatearMoneda(equipo.totalPagadoMesActual || 0)}</span></p>
-          <p><strong>Cuenta/Tarjeta:</strong> ${sanitizeHTML(equipo.cuentaTarjeta)}</p>
+          <p><strong>Cuenta/Tarjeta:</strong> ${sanitizeHTML(equipo.cuentaTarjeta)} 🔒</p>
         </div>
         
         <div class="detalle-section">
@@ -527,7 +585,7 @@ export class EquiposModule {
         </div>
         
         <div class="detalle-section">
-          <h3>🛰️ Información Técnica</h3>
+          <h3>🛰️ Información Técnica 🔒</h3>
           <p><strong>Cantidad:</strong> ${equipo.numeroEquipos} equipo(s)</p>
           <p><strong>ID:</strong> ${sanitizeHTML(equipo.numeroId)}</p>
           <p><strong>Serie:</strong> ${sanitizeHTML(equipo.numeroSerie)}</p>
@@ -536,13 +594,19 @@ export class EquiposModule {
         
         ${equipo.notas ? `
         <div class="detalle-section full-width">
-          <h3>📝 Notas</h3>
+          <h3>📝 Notas 🔒</h3>
           <p>${sanitizeHTML(equipo.notas)}</p>
         </div>
         ` : ''}
       </div>
       
       <div class="detalle-actions">
+        <button class="btn btn-primary" onclick="window.app.currentModule.editarEquipo()">
+          ✏️ Editar
+        </button>
+        <button class="btn btn-danger" onclick="window.app.currentModule.eliminarEquipo()">
+          🗑️ Eliminar
+        </button>
         ${btnEstado}
       </div>
     `;
@@ -564,22 +628,33 @@ export class EquiposModule {
   async eliminarEquipo() {
     if (!this.equipoActual) return;
     
-    if (!confirm('¿Estás seguro de eliminar este equipo? Esta acción no se puede deshacer.')) {
-      return;
-    }
+    const confirmado = await showConfirmModal(
+      '¿Eliminar equipo?',
+      '¿Estás seguro de eliminar este equipo? Esta acción no se puede deshacer.'
+    );
     
-    Loader.show('Eliminando equipo...');
+    if (!confirmado) return;
     
-    const result = await ApiClient.delete(`/equipos/${this.equipoActual.id}`);
-    
-    Loader.hide();
-    
-    if (result) {
-      Toast.success('🗑️ Equipo eliminado exitosamente');
-      if (this.modalDetalle) {
-        this.modalDetalle.close();
+    try {
+      Loader.show('Eliminando equipo...');
+      
+      const result = await ApiClient.delete(`/equipos/${this.equipoActual.id}`);
+      
+      Loader.hide();
+      
+      if (result) {
+        Toast.success('🗑️ Equipo eliminado');
+        if (this.modalDetalle) {
+          this.modalDetalle.close();
+        }
+        await this.cargarEquipos();
+        this.renderEquipos();
       }
-      await this.cargarEquipos();
+      
+    } catch (error) {
+      console.error('❌ Error al eliminar:', error);
+      Loader.hide();
+      Toast.error('Error al eliminar equipo');
     }
   }
   
@@ -588,21 +663,19 @@ export class EquiposModule {
    */
   async cambiarEstadoEquipo(equipoId, activo) {
     try {
-      // Determinar nuevo estado
       const nuevoEstado = activo === 'NO' ? 'SI' : 'NO';
       const accion = nuevoEstado === 'NO' ? 'cancelar' : 'activar';
       
-      // Mostrar modal de confirmación
-      const confirmar = await showConfirmModal(
+      const confirmado = await showConfirmModal(
         `¿${accion.charAt(0).toUpperCase() + accion.slice(1)} equipo?`,
         `¿Estás seguro de que deseas ${accion} este equipo?`
       );
       
-      if (!confirmar) return;
+      if (!confirmado) return;
       
       Loader.show(`${accion === 'cancelar' ? 'Cancelando' : 'Activando'} equipo...`);
       
-      // Obtener datos del equipo
+      // Obtener equipo actual
       const result = await ApiClient.get(`/equipos/${equipoId}`);
       
       if (!result || !result.data) {
@@ -611,33 +684,35 @@ export class EquiposModule {
       
       const equipo = result.data;
       
-      // Actualizar estado activo
-      equipo.activo = nuevoEstado;
+      // ✅ DESCIFRAR PARA ACTUALIZAR
+      const equipoDescifrado = await CryptoService.decryptObject(equipo, this.camposSensibles);
       
-      // Guardar cambios
-      const updateResult = await ApiClient.request(`/equipos/${equipoId}`, 'PUT', equipo);
+      // Actualizar estado activo
+      equipoDescifrado.activo = nuevoEstado;
+      
+      // ✅ CIFRAR ANTES DE ENVIAR
+      const dataCifrada = await CryptoService.encryptObject(equipoDescifrado, this.camposSensibles);
+      
+      const updateResult = await ApiClient.request(`/equipos/${equipoId}`, 'PUT', dataCifrada);
       
       if (updateResult) {
         const mensaje = accion === 'cancelar' ? 'cancelado' : 'activado';
-        Toast.success(`✅ Equipo ${mensaje} exitosamente`);
+        Toast.success(`✅ Equipo ${mensaje}`);
         
-        // Cerrar modal de detalle si está abierto
         if (this.modalDetalle) {
           this.modalDetalle.close();
         }
         
-        // Recargar lista
         await this.cargarEquipos();
-      } else {
-        throw new Error('Error al actualizar el equipo');
+        this.renderEquipos();
       }
+      
+      Loader.hide();
       
     } catch (error) {
       console.error('❌ Error:', error);
-      const accion = error.message.includes('cancelar') ? 'cancelar' : 'actualizar';
-      Toast.error(`Error al ${accion} equipo: ${error.message}`);
-    } finally {
       Loader.hide();
+      Toast.error('Error al cambiar estado del equipo');
     }
   }
   
@@ -658,3 +733,4 @@ export class EquiposModule {
 }
 
 export default EquiposModule;
+
