@@ -146,4 +146,66 @@ export class Modal {
   }
 }
 
+/**
+ * Mostrar modal de confirmación
+ * @param {string} titulo - Título del modal
+ * @param {string} mensaje - Mensaje del modal
+ * @returns {Promise<boolean>} - True si confirmó, false si canceló
+ */
+export function showConfirmModal(titulo, mensaje) {
+  return new Promise((resolve) => {
+    const modal = document.createElement('div');
+    modal.className = 'modal-overlay';
+    modal.innerHTML = `
+      <div class="modal-content modal-confirm">
+        <div class="modal-header">
+          <h3>${titulo}</h3>
+        </div>
+        <div class="modal-body">
+          <p>${mensaje}</p>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" id="modal-cancel">❌ Cancelar</button>
+          <button class="btn btn-primary" id="modal-confirm">✅ Confirmar</button>
+        </div>
+      </div>
+    `;
+    
+    document.body.appendChild(modal);
+    
+    // Mostrar modal con animación
+    setTimeout(() => modal.classList.add('show'), 10);
+    
+    document.getElementById('modal-confirm').onclick = () => {
+      modal.classList.remove('show');
+      setTimeout(() => {
+        document.body.removeChild(modal);
+        resolve(true);
+      }, 200);
+    };
+    
+    document.getElementById('modal-cancel').onclick = () => {
+      modal.classList.remove('show');
+      setTimeout(() => {
+        document.body.removeChild(modal);
+        resolve(false);
+      }, 200);
+    };
+    
+    // Cerrar con ESC
+    const escHandler = (e) => {
+      if (e.key === 'Escape') {
+        modal.classList.remove('show');
+        setTimeout(() => {
+          document.body.removeChild(modal);
+          document.removeEventListener('keydown', escHandler);
+          resolve(false);
+        }, 200);
+      }
+    };
+    document.addEventListener('keydown', escHandler);
+  });
+}
+
 export default Modal;
+

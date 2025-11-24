@@ -11,7 +11,7 @@ import {
   debounce 
 } from '../core/utils.js';
 import { Toast } from '../components/toast.js';
-import { Modal } from '../components/modal.js';
+import { Modal, showConfirmModal } from '../components/modal.js';
 import { Loader } from '../components/loader.js';
 
 export class EquiposModule {
@@ -487,6 +487,15 @@ export class EquiposModule {
     
     const badgeClass = getBadgeClass(estadoFinal);
     
+    // Botón de cancelar o activar
+    const btnEstado = equipo.activo === 'NO' 
+      ? `<button class="btn btn-success" onclick="window.app.currentModule.cambiarEstadoEquipo(${equipo.id}, 'NO')">
+           ✅ Activar Equipo
+         </button>`
+      : `<button class="btn btn-warning" onclick="window.app.currentModule.cambiarEstadoEquipo(${equipo.id}, 'SI')">
+           ⏸️ Cancelar Equipo
+         </button>`;
+    
     return `
       <div class="detalle-grid">
         <div class="detalle-section">
@@ -514,7 +523,7 @@ export class EquiposModule {
         <div class="detalle-section">
           <h3>⏰ Vencimiento</h3>
           <p><strong>Fecha:</strong> ${formatearFecha(equipo.vencimiento)}</p>
-          <p><strong>Días restantes:</strong> <span class="${diasRestantes < 0 ? 'text-danger' : diasRestantes <= 5 ? 'text-warning' : ''}">${diasRestantes} días</span></p>
+          <p><strong>Días restantes:</strong> <span class="${diasRestantes < 0 ? 'text-danger' : diasRestantes <= 5 ? 'text-warning' : ''}">${equipo.activo === 'NO' ? '-' : diasRestantes + ' días'}</span></p>
         </div>
         
         <div class="detalle-section">
@@ -531,6 +540,10 @@ export class EquiposModule {
           <p>${sanitizeHTML(equipo.notas)}</p>
         </div>
         ` : ''}
+      </div>
+      
+      <div class="detalle-actions">
+        ${btnEstado}
       </div>
     `;
   }
@@ -567,6 +580,64 @@ export class EquiposModule {
         this.modalDetalle.close();
       }
       await this.cargarEquipos();
+    }
+  }
+  
+  /**
+   * Cambiar estado de un equipo (CANCELADO ↔ ACTIVO)
+   */
+  async cambiarEstadoEquipo(equipoId, activo) {
+    try {
+      // Determinar nuevo estado
+      const nuevoEstado = activo === 'NO' ? 'SI' : 'NO';
+      const accion = nuevoEstado === 'NO' ? 'cancelar' : 'activar';
+      
+      // Mostrar modal de confirmación
+      const confirmar = await showConfirmModal(
+        `¿${accion.charAt(0).toUpperCase() + accion.slice(1)} equipo?`,
+        `¿Estás seguro de que deseas ${accion} este equipo?`
+      );
+      
+      if (!confirmar) return;
+      
+      Loader.show(`${accion === 'cancelar' ? 'Cancelando' : 'Activando'} equipo...`);
+      
+      // Obtener datos del equipo
+      const result = await ApiClient.get(`/equipos/${equipoId}`);
+      
+      if (!result || !result.data) {
+        throw new Error('No se pudo obtener el equipo');
+      }
+      
+      const equipo = result.data;
+      
+      // Actualizar estado activo
+      equipo.activo = nuevoEstado;
+      
+      // Guardar cambios
+      const updateResult = await ApiClient.request(`/equipos/${equipoId}`, 'PUT', equipo);
+      
+      if (updateResult) {
+        const mensaje = accion === 'cancelar' ? 'cancelado' : 'activado';
+        Toast.success(`✅ Equipo ${mensaje} exitosamente`);
+        
+        // Cerrar modal de detalle si está abierto
+        if (this.modalDetalle) {
+          this.modalDetalle.close();
+        }
+        
+        // Recargar lista
+        await this.cargarEquipos();
+      } else {
+        throw new Error('Error al actualizar el equipo');
+      }
+      
+    } catch (error) {
+      console.error('❌ Error:', error);
+      const accion = error.message.includes('cancelar') ? 'cancelar' : 'actualizar';
+      Toast.error(`Error al ${accion} equipo: ${error.message}`);
+    } finally {
+      Loader.hide();
     }
   }
   

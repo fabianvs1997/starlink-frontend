@@ -28,27 +28,65 @@ export class DashboardModule {
    * Cargar estadísticas
    */
   async cargarEstadisticas() {
-    const result = await ApiClient.get('/estadisticas');
-    
-    if (!result || !result.data) {
-      this.container.innerHTML = '<div class="sl-error-state">❌ Error al cargar estadísticas</div>';
-      return;
+    try {
+      Loader.show();
+      
+      // ✅ Llamar al endpoint y desempaquetar data
+      const response = await ApiClient.get('/estadisticas');
+      
+      console.log('📊 Response completo:', response);
+      
+      // Desempaquetar data si viene en ApiResponse
+      const stats = response?.data || response;
+      
+      console.log('📊 Estadísticas procesadas:', stats);
+      
+      // Validar que stats tenga las propiedades necesarias
+      if (!stats || typeof stats !== 'object') {
+        throw new Error('Respuesta inválida del servidor');
+      }
+      
+      this.stats = stats;
+      this.renderEstadisticas();
+      
+      Loader.hide();
+      
+    } catch (error) {
+      console.error('❌ Error al cargar estadísticas:', error);
+      Loader.hide();
+      Toast.error('Error al cargar estadísticas');
+      
+      if (this.container) {
+        this.container.innerHTML = `
+          <div class="sl-alert sl-alert-danger">
+            <span class="alert-icon">❌</span>
+            <div class="alert-content">
+              <strong>Error:</strong> No se pudieron cargar las estadísticas.
+              <br><small>${error.message}</small>
+            </div>
+          </div>
+        `;
+      }
     }
-    
-    this.stats = result.data;
-    this.renderEstadisticas();
   }
   
   /**
    * Renderizar estadísticas
    */
   renderEstadisticas() {
+    if (!this.stats) {
+      console.error('❌ No hay estadísticas para renderizar');
+      return;
+    }
+    
     const stats = this.stats;
+    
+    console.log('🎨 Renderizando estadísticas:', stats);
     
     let html = '<div class="dashboard-container">';
     
     // Alertas urgentes
-    if (stats.equiposVencidos > 0) {
+    if (stats.equiposVencidos && stats.equiposVencidos > 0) {
       html += `
         <div class="sl-alert sl-alert-danger">
           <span class="alert-icon">🔴</span>
@@ -59,7 +97,7 @@ export class DashboardModule {
       `;
     }
     
-    if (stats.proximoVencimiento <= 5 && stats.proximoVencimiento > 0) {
+    if (stats.proximoVencimiento && stats.proximoVencimiento <= 5 && stats.proximoVencimiento > 0) {
       html += `
         <div class="sl-alert sl-alert-warning">
           <span class="alert-icon">⏰</span>
@@ -79,7 +117,7 @@ export class DashboardModule {
         <div class="stat-icon">📱</div>
         <div class="stat-content">
           <h3 class="stat-label">Total Equipos</h3>
-          <div class="stat-value">${stats.totalEquipos}</div>
+          <div class="stat-value">${stats.totalEquipos || 0}</div>
           <p class="stat-description">Registrados en el sistema</p>
         </div>
       </div>
@@ -91,7 +129,7 @@ export class DashboardModule {
         <div class="stat-icon">✅</div>
         <div class="stat-content">
           <h3 class="stat-label">Equipos Activos</h3>
-          <div class="stat-value">${stats.equiposActivos}</div>
+          <div class="stat-value">${stats.equiposActivos || 0}</div>
           <p class="stat-description">Funcionando correctamente</p>
         </div>
       </div>
@@ -103,7 +141,7 @@ export class DashboardModule {
         <div class="stat-icon">⏳</div>
         <div class="stat-content">
           <h3 class="stat-label">Pendiente Pago</h3>
-          <div class="stat-value">${stats.equiposPendientePago}</div>
+          <div class="stat-value">${stats.equiposPendientePago || 0}</div>
           <p class="stat-description">Requieren pago</p>
         </div>
       </div>
@@ -115,7 +153,7 @@ export class DashboardModule {
         <div class="stat-icon">🔴</div>
         <div class="stat-content">
           <h3 class="stat-label">Vencidos</h3>
-          <div class="stat-value">${stats.equiposVencidos}</div>
+          <div class="stat-value">${stats.equiposVencidos || 0}</div>
           <p class="stat-description">Pasaron la fecha límite</p>
         </div>
       </div>
@@ -139,14 +177,14 @@ export class DashboardModule {
         <div class="stat-icon">💵</div>
         <div class="stat-content">
           <h3 class="stat-label">Monto Total Mensual</h3>
-          <div class="stat-value">${formatearMoneda(stats.montoTotalMensual)}</div>
+          <div class="stat-value">${formatearMoneda(stats.montoTotalMensual || 0)}</div>
           <p class="stat-description">Ingresos esperados</p>
         </div>
       </div>
     `;
     
     // Pagado Este Mes
-    const porcentajePagado = stats.montoTotalMensual > 0 
+    const porcentajePagado = stats.montoTotalMensual && stats.montoTotalMensual > 0
       ? Math.round((stats.montoPagadoMesActual / stats.montoTotalMensual) * 100) 
       : 0;
     
@@ -155,7 +193,7 @@ export class DashboardModule {
         <div class="stat-icon">💰</div>
         <div class="stat-content">
           <h3 class="stat-label">Pagado Este Mes</h3>
-          <div class="stat-value">${formatearMoneda(stats.montoPagadoMesActual)}</div>
+          <div class="stat-value">${formatearMoneda(stats.montoPagadoMesActual || 0)}</div>
           <p class="stat-description">${porcentajePagado}% del total</p>
         </div>
       </div>
@@ -167,7 +205,7 @@ export class DashboardModule {
         <div class="stat-icon">💸</div>
         <div class="stat-content">
           <h3 class="stat-label">Deuda Pendiente</h3>
-          <div class="stat-value">${formatearMoneda(stats.deudaTotalMesActual)}</div>
+          <div class="stat-value">${formatearMoneda(stats.deudaTotalMesActual || 0)}</div>
           <p class="stat-description">Por cobrar este mes</p>
         </div>
       </div>
@@ -179,8 +217,8 @@ export class DashboardModule {
         <div class="stat-icon">⏰</div>
         <div class="stat-content">
           <h3 class="stat-label">Próximo Vence</h3>
-          <div class="stat-value">${stats.proximoVencimiento}</div>
-          <p class="stat-description">días restantes</p>
+          <div class="stat-value">${stats.proximoVencimiento || 'N/A'}</div>
+          <p class="stat-description">${stats.proximoVencimiento > 0 ? 'días restantes' : 'sin vencimientos'}</p>
         </div>
       </div>
     `;
@@ -203,6 +241,8 @@ export class DashboardModule {
     html += '</div>'; // Cierre dashboard-container
     
     this.container.innerHTML = html;
+    
+    console.log('✅ Estadísticas renderizadas exitosamente');
   }
   
   /**
@@ -217,3 +257,6 @@ export class DashboardModule {
 }
 
 export default DashboardModule;
+
+
+

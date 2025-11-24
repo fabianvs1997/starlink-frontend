@@ -584,3 +584,154 @@
     grid-template-columns: 1fr;
   }
 }
+
+
+/* Botones de estado de equipo */
+.equipo-footer .btn-group {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.equipo-footer .btn-sm {
+    padding: 6px 12px;
+    font-size: 12px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.equipo-footer .btn-warning {
+    background-color: #f39c12;
+    color: white;
+}
+
+.equipo-footer .btn-warning:hover {
+    background-color: #e67e22;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(243, 156, 18, 0.3);
+}
+
+.equipo-footer .btn-success {
+    background-color: #27ae60;
+    color: white;
+}
+
+.equipo-footer .btn-success:hover {
+    background-color: #229954;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(39, 174, 96, 0.3);
+}
+
+/* Estado CANCELADO */
+.equipo-card.cancelado {
+    opacity: 0.7;
+    border-left: 4px solid #e74c3c;
+}
+
+.badge-cancelado {
+    background-color: #e74c3c;
+    color: white;
+}
+
+
+/* Modal de confirmación */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.modal-overlay.show {
+  opacity: 1;
+}
+
+.modal-content.modal-confirm {
+  background: var(--color-surface);
+  border-radius: 12px;
+  padding: 24px;
+  max-width: 450px;
+  width: 90%;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  transform: scale(0.9);
+  transition: transform 0.2s ease;
+}
+
+.modal-overlay.show .modal-content {
+  transform: scale(1);
+}
+
+.modal-content.modal-confirm .modal-header {
+  margin-bottom: 16px;
+}
+
+.modal-content.modal-confirm .modal-header h3 {
+  margin: 0;
+  font-size: 20px;
+  color: var(--color-text);
+}
+
+.modal-content.modal-confirm .modal-body {
+  margin-bottom: 24px;
+}
+
+.modal-content.modal-confirm .modal-body p {
+  margin: 0;
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+}
+
+.modal-content.modal-confirm .modal-footer {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+}
+
+/* Botones de estado en detalle de equipo */
+.detalle-actions {
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid var(--color-border);
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.detalle-actions .btn {
+  min-width: 150px;
+}
+
+/* Botón de cancelar */
+.btn-warning {
+  background-color: #f39c12;
+  color: white;
+}
+
+.btn-warning:hover {
+  background-color: #e67e22;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(243, 156, 18, 0.3);
+}
+
+/* Estado CANCELADO en tabla */
+.badge-cancelado {
+  background-color: #95a5a6;
+  color: white;
+}
+
+tr:has(.badge-cancelado) {
+  opacity: 0.6;
+}
